@@ -9,15 +9,17 @@ import UIKit
 
 class ViewController: UIViewController {
 
-    let client = RedditClient()
+    let repo = DataRepository()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        client.request(endpoint: .top(keyword: "cats")) { (response) in
-            switch(response) {
-            case .success(let responseModel, let httpStatusCode):
-                break
-            case .error(let error, let httpStatusCode):
+        repo.getPosts(type: .top, forKeyword: "cats") { (result) in
+            switch(result) {
+            case .success(let posts):
+                print(posts)
+            case .error(let error):
+                print(error)
                 //TODO: show error
                 break
             }

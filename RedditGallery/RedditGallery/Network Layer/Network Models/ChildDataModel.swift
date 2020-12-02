@@ -8,6 +8,7 @@
 import Foundation
 
 class ChildDataModel: Codable {
+    let id: String
     let author: String
     let title: String
     let permalink: String

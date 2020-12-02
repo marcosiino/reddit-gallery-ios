@@ -16,7 +16,7 @@ class RedditClient {
     typealias RequestCompletionHandler = (_ result: ResponseType) -> ()
     
     private let session: URLSession
-    private static let baseURL: URL = URL(string: "https://www.reddit.com/")!
+    fileprivate static let baseURL: String = "https://www.reddit.com/"
     
     init() {
         session = URLSession(configuration: URLSessionConfiguration.default)
@@ -56,13 +56,25 @@ class RedditClient {
 
 extension RedditClient {
     enum Endpoint {
-        case top(keyword: String)
+        /**
+         Top listings for the specified keyword. If pageAfter is specified, the items after the specified item id is returned (for paging), otherwise the first page is returned
+         */
+        case top(keyword: String, afterId: String? = nil)
         
         var url: URL {
             get {
                 switch(self) {
-                case .top(let keyword):
-                    return baseURL.appendingPathComponent("r/\(keyword)/top.json")
+                case .top(let keyword, let afterId):
+                    var urlComps = URLComponents(string: baseURL)!
+                    urlComps.path = "/r/\(keyword)/top.json"
+                    
+                    if let afterId = afterId {
+                        urlComps.queryItems = [
+                            URLQueryItem(name: "after", value: afterId)
+                        ]
+                    }
+                    
+                    return urlComps.url!
                 }
             }
         }
