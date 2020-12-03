@@ -39,10 +39,6 @@
 		A9BFC08F25793DC500B800C4 /* EmptyView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9BFC08E25793DC500B800C4 /* EmptyView.xib */; };
 		A9BFC09425793DCF00B800C4 /* EmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BFC09325793DCF00B800C4 /* EmptyView.swift */; };
 		A9BFC09F25794A1200B800C4 /* ImageRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BFC09E25794A1200B800C4 /* ImageRepository.swift */; };
-		A9BFC0A725794D0C00B800C4 /* CachedImage+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BFC0A325794D0C00B800C4 /* CachedImage+CoreDataClass.swift */; };
-		A9BFC0A825794D0C00B800C4 /* CachedImage+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BFC0A425794D0C00B800C4 /* CachedImage+CoreDataProperties.swift */; };
-		A9BFC0A925794D0C00B800C4 /* Favorite+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BFC0A525794D0C00B800C4 /* Favorite+CoreDataClass.swift */; };
-		A9BFC0AA25794D0C00B800C4 /* Favorite+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BFC0A625794D0C00B800C4 /* Favorite+CoreDataProperties.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -102,10 +98,6 @@
 		A9BFC08E25793DC500B800C4 /* EmptyView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EmptyView.xib; sourceTree = "<group>"; };
 		A9BFC09325793DCF00B800C4 /* EmptyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyView.swift; sourceTree = "<group>"; };
 		A9BFC09E25794A1200B800C4 /* ImageRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageRepository.swift; sourceTree = "<group>"; };
-		A9BFC0A325794D0C00B800C4 /* CachedImage+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CachedImage+CoreDataClass.swift"; sourceTree = "<group>"; };
-		A9BFC0A425794D0C00B800C4 /* CachedImage+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CachedImage+CoreDataProperties.swift"; sourceTree = "<group>"; };
-		A9BFC0A525794D0C00B800C4 /* Favorite+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Favorite+CoreDataClass.swift"; sourceTree = "<group>"; };
-		A9BFC0A625794D0C00B800C4 /* Favorite+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Favorite+CoreDataProperties.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -277,10 +269,6 @@
 			isa = PBXGroup;
 			children = (
 				A99876352577E373007C5EF9 /* RedditGallery.xcdatamodeld */,
-				A9BFC0A325794D0C00B800C4 /* CachedImage+CoreDataClass.swift */,
-				A9BFC0A425794D0C00B800C4 /* CachedImage+CoreDataProperties.swift */,
-				A9BFC0A525794D0C00B800C4 /* Favorite+CoreDataClass.swift */,
-				A9BFC0A625794D0C00B800C4 /* Favorite+CoreDataProperties.swift */,
 			);
 			path = "Core Data";
 			sourceTree = "<group>";
@@ -421,8 +409,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				A9003D922578236300402F62 /* ImageModel.swift in Sources */,
-				A9BFC0A825794D0C00B800C4 /* CachedImage+CoreDataProperties.swift in Sources */,
-				A9BFC0A725794D0C00B800C4 /* CachedImage+CoreDataClass.swift in Sources */,
 				A9BFC05B2578D79C00B800C4 /* DataAccessEnabledProtocol.swift in Sources */,
 				A9BFC09425793DCF00B800C4 /* EmptyView.swift in Sources */,
 				A9003D8525780EF300402F62 /* ChildDataModel.swift in Sources */,
@@ -435,7 +421,6 @@
 				A99876312577E373007C5EF9 /* MainViewController.swift in Sources */,
 				A9BFC04B2578CA0700B800C4 /* FavoritesViewController.swift in Sources */,
 				A9BFC0662578D94400B800C4 /* DataRepository.swift in Sources */,
-				A9BFC0A925794D0C00B800C4 /* Favorite+CoreDataClass.swift in Sources */,
 				A998762D2577E373007C5EF9 /* AppDelegate.swift in Sources */,
 				A9003DBA257847B400402F62 /* Post.swift in Sources */,
 				A9003DA325783B5E00402F62 /* String+HTMLEntities.swift in Sources */,
@@ -443,7 +428,6 @@
 				A99876672577E39D007C5EF9 /* RedditClient.swift in Sources */,
 				A9BFC09F25794A1200B800C4 /* ImageRepository.swift in Sources */,
 				A99876372577E373007C5EF9 /* RedditGallery.xcdatamodeld in Sources */,
-				A9BFC0AA25794D0C00B800C4 /* Favorite+CoreDataProperties.swift in Sources */,
 				A9BFC07D2578DC8F00B800C4 /* GalleryItemCell.swift in Sources */,
 				A998762F2577E373007C5EF9 /* SceneDelegate.swift in Sources */,
 				A9BFC03B2578C8BC00B800C4 /* ListingViewController.swift in Sources */,

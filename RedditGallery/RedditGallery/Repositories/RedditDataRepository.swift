@@ -8,6 +8,9 @@
 import Foundation
 import CoreData
 
+/**
+ Concrete DataRepository
+ */
 class RedditDataRepository: DataRepository {
     
     private let client = RedditClient()

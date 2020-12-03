@@ -16,6 +16,9 @@ enum DataRepositoryPostType {
     case top
 }
 
+/**
+ DataRepository interface
+ */
 protocol DataRepository {
     func getPosts(type: DataRepositoryPostType, forKeyword keyword: String, afterId: String?, completionHandler: @escaping (DataRepositoryResult<[Post]>) -> () )
 }

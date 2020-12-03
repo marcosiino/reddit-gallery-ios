@@ -6,30 +6,54 @@
 //
 
 import Foundation
+import UIKit
 
+/**
+ A singleton which download images asyncronously, caches them, and return the cached images if present instead of redownloading them
+ */
 class ImageRepository {
+    
+    static let sharedInstance = ImageRepository()
+    private init() { }
+    
+    enum Result {
+        case success(image: UIImage?)
+        case error(error: Error?)
+    }
     
     let session = URLSession(configuration: URLSessionConfiguration.default)
     
-    func getImage(url: String, completion: @escaping (UIImage?) -> ()) {
+    func getImage(url: String, completion: @escaping (Result) -> ()) {
         
-        //Download the thumbnail asynchronously
+        //If the image is cached
+        if let cachedImage = CoreDataHelper.getCachedImage(url: url) {
+            if let imageData = cachedImage.image {
+                completion(.success(image: UIImage(data: imageData)))
+                return
+            }
+        }
+        
+        //Otherwise, download it asynchronously, cache it and return it through the completion closure
+        
         if let url = URL(string: url) {
             
-            NSEntity
-            
             session.dataTask(with: url) { [weak self] (data, response, error) in
-                DispatchQueue.main.async { [weak self] in
+                DispatchQueue.main.async {
                     guard error == nil else {
-                        self?.imageView?.image = UIImage(systemName: "camera.fill")
+                        completion(.error(error: error))
                         return
                     }
                     
                     if let data = data, let image = UIImage(data: data) {
-                        self?.imageView?.image = image
+                        CoreDataHelper.saveCachedImage(url: url.absoluteString, imageData: data)
+                        completion(.success(image: image))
+                    }
+                    else {
+                        completion(.error(error: nil))
                     }
                 }
                 
             }.resume()
+        }
     }
 }

@@ -10,28 +10,26 @@ import UIKit
 
 class GalleryItemCell: UICollectionViewCell {
     @IBOutlet weak var imageView: UIImageView?
+    private let noImage = UIImage(systemName: "camera.fill")
     
     func setPost(post: Post) {
         //Reset the image
-        imageView?.image = UIImage(systemName: "camera.fill")
+        imageView?.image = noImage
         
-        //Download the thumbnail asynchronously
-        let session = URLSession(configuration: URLSessionConfiguration.default)
-        if let thumbnail = post.thumbnail, let url = URL(string: thumbnail) {
-            print(post.thumbnail)
-            session.dataTask(with: url) { [weak self] (data, response, error) in
-                DispatchQueue.main.async { [weak self] in
-                    guard error == nil else {
-                        self?.imageView?.image = UIImage(systemName: "camera.fill")
-                        return
-                    }
-                    
-                    if let data = data, let image = UIImage(data: data) {
+        if let thumbnail = post.thumbnail {
+            
+            ImageRepository.sharedInstance.getImage(url: thumbnail) { [weak self] (result) in
+                switch(result) {
+                case .success(let image):
+                    if let image = image {
                         self?.imageView?.image = image
                     }
+                break
+                case .error(let error):
+                    self?.imageView?.image = self?.noImage
+                    break
                 }
-                
-            }.resume()
+            }
         }
     }
 }
