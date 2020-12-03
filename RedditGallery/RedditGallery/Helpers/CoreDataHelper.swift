@@ -6,3 +6,16 @@
 //
 
 import Foundation
+import UIKit
+import CoreData
+
+class CoreDataHelper {
+    
+    var persistentContainer: NSPersistentContainer {
+        get {
+            return (UIApplication.shared.delegate as! AppDelegate).persistentContainer
+        }
+    }
+
+    
+}
