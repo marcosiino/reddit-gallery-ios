@@ -16,6 +16,10 @@ class CoreDataHelper {
             return (UIApplication.shared.delegate as! AppDelegate).persistentContainer
         }
     }
+    
+    func getCachedImage(url: String) -> CachedImage {
+        
+    }
 
     
 }

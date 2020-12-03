@@ -21,6 +21,8 @@ class ListingViewController: UIViewController, LocalizedTitleViewController, Dat
         }
     }
     
+    private var emptyView: EmptyView?
+    
     @IBOutlet weak var collectionView: UICollectionView?
     
     override func viewDidLoad() {
@@ -43,22 +45,24 @@ class ListingViewController: UIViewController, LocalizedTitleViewController, Dat
             layout.sectionInset = UIEdgeInsets.zero
         }
         
-    }
+        if let loadedEmptyView = Bundle.main.loadNibNamed("EmptyView", owner: nil, options: [:])?.first as? EmptyView {
+            emptyView = loadedEmptyView
+            emptyView?.setMessage(message: NSLocalizedString("generic.initialEmptyMessage", comment: "generic.initialEmptyMessage"))
+            collectionView?.backgroundView = emptyView
+        }
     
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        
-        /*if let collectionView = collectionView, let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
-        
-            let size = collectionView.bounds.size.width/3.0
-            layout.itemSize = CGSize(width: size, height: size)
-            layout.estimatedItemSize = CGSize(width: size, height: size)
-            layout.minimumInteritemSpacing = 0.0
-        }*/
     }
     
     private func updateUI() {
         collectionView?.reloadData()
+        
+        if let posts = posts, posts.count > 0 {
+            collectionView?.backgroundView = nil
+        }
+        else {
+            collectionView?.backgroundView = emptyView
+            emptyView?.setMessage(message: NSLocalizedString("generic.noResults", comment: "generic.noResults"))
+        }
     }
     
     func getLocalizedTitle() -> String {
@@ -100,8 +104,10 @@ extension ListingViewController: UISearchResultsUpdating {
         let searchText = searchController.searchBar.text
         
         if let searchText = searchText {
+            //Invalidate the previous timer (if any) and create a new timer which delays the search to avoid asking the DataRepository new items for every character typed
             searchTimer?.invalidate()
             searchTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: false, block: { [weak self] (timer) in
+            
                 self?.search(keyword: searchText)
             })
         }
@@ -109,6 +115,7 @@ extension ListingViewController: UISearchResultsUpdating {
 }
 
 extension ListingViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+    
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "GalleryItemCell", for: indexPath) as? GalleryItemCell else  {

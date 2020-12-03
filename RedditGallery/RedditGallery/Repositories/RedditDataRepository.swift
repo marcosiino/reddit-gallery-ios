@@ -38,15 +38,28 @@ class RedditDataRepository: DataRepository {
                     var posts = [Post]()
                     //For each child in the deserialized network model
                     for child in responseModel.data.children {
+                        guard child.kind == "t3" else { //t3 = posts
+                            continue
+                        }
+                        
                         let data = child.data
+                        
+                        guard let postId = data.id, let author = data.author, let title = data.title, let thumbnail = data.thumbnail, let ups = data.ups, let downs = data.downs, let permalink = data.permalink else {
+                            continue
+                        }
                         
                         let mediumResImages = data.preview?.images.map({ (imageSet) -> String in
                             let image = imageSet.medium ?? imageSet.original
                             return image.url.decodeHtmlEncodedString()
                         }) ?? [String]()
                         
+                        //If this post doesn't have a thumbnail and at least an image, skip it
+                        guard mediumResImages.count > 0 else {
+                            continue
+                        }
+                        
                         //Create an higher level data model of type Post
-                        let post = Post(id: data.id, author: data.author, title: data.title, images: mediumResImages, thumbnail: data.thumbnail?.decodeHtmlEncodedString(), ups: data.ups, downs: data.downs, permalink: data.permalink.decodeHtmlEncodedString())
+                        let post = Post(id: postId, author: author, title: title, images: mediumResImages, thumbnail: thumbnail.decodeHtmlEncodedString(), ups: ups, downs: downs, permalink: permalink.decodeHtmlEncodedString())
                         posts.append(post)
                     }
                     
