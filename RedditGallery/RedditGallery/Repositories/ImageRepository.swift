@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 
 /**
- A singleton which download images asyncronously, caches them, and return the cached images if present instead of redownloading them
+ A singleton which download images asyncronously, caches them, and return the cached images if present instead of redownloading them. This class does what SDWebCache or Kingfisher do with image caching, in a simpler way.
  */
 class ImageRepository {
     
