@@ -17,13 +17,13 @@ class MainViewController: UITabBarController {
             for tabVC in viewControllers {
                 if let tabNavViewController = tabVC as? UINavigationController {
                     //Setting localized titles to view controllers which adheres to LocalizedTitleViewController
-                    if let rootVC = tabNavViewController.viewControllers.first as? LocalizedTitleViewController {
-                        rootVC.title = rootVC.getLocalizedTitle()
+                    if let titleLocalizableVC = tabNavViewController.viewControllers.first as? TitleLocalizable {
+                        titleLocalizableVC.title = titleLocalizableVC.getLocalizedTitle()
                     }
                     
                     //Injecting RedditDataRepository to viewcontrollers which  adheres to DataAccessViewController interface
-                    if var rootVC = tabNavViewController.viewControllers.first as? DataAccessEnabledProtocol {
-                        rootVC.dataRepository = RedditDataRepository()
+                    if var dataRepoInjectableVC = tabNavViewController.viewControllers.first as? DataRepositoryInjectable {
+                        dataRepoInjectableVC.dataRepository = RedditDataRepository()
                     }
                 }
             }

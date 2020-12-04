@@ -88,4 +88,9 @@ class RedditDataRepository: DataRepository {
         }
     }
     
+    func getSavedFavorites(completionHandler: @escaping (DataRepositoryResult<[Favorite]>) -> ()) {
+        //TODO
+    }
+    
+    
 }

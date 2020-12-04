@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 import MSLoadingHUD
 
-class ListingViewController: UIViewController, LocalizedTitleViewController, DataAccessEnabledProtocol, Loadable {
+class ListingViewController: UIViewController, TitleLocalizable, DataRepositoryInjectable, Loadable {
     
     var dataRepository: DataRepository?
     
@@ -84,7 +84,9 @@ class ListingViewController: UIViewController, LocalizedTitleViewController, Dat
         
         lastSearchKeyword = keyword
         
-        showLoadingHUD(loadingMessage: "Searching images...")
+        let formatStr = NSLocalizedString("listing.searchingLoadingHUDText", comment:"listing.searchingLoadingHUDText")
+        
+        showLoadingHUD(loadingMessage: String(format:formatStr, lastSearchKeyword))
         dataRepository?.getPosts(type: .top, forKeyword: keyword, afterId: nil, completionHandler: { [weak self] (result) in
             
             self?.hideLoadingHUD()
@@ -155,18 +157,26 @@ extension ListingViewController: UICollectionViewDataSource, UICollectionViewDel
         
         //If it is going to display the last item, i start requesting the data after that item (paging)
         if indexPath.row == posts.count - 1 {
-            dataRepository?.getPosts(type: .top, forKeyword: lastSearchKeyword, afterId: "t3_" + posts[indexPath.row].id, completionHandler: { [weak self] (result) in
-                switch(result) {
-                case .success(let posts):
-                    if posts.count > 0 {
-                        self?.posts?.append(contentsOf: posts)
-                    }
-                    
-                case .error(let error):
-                    break
-                }
-            })
+            loadMoreResults(afterPostId: "t3_" + posts[indexPath.row].id)
         }
     }
     
+    private func loadMoreResults(afterPostId postId: String) {
+        showLoadingHUD(loadingMessage: NSLocalizedString("listing.loadingMoreResults", comment: "listing.loadingMoreResults"))
+        
+        dataRepository?.getPosts(type: .top, forKeyword: lastSearchKeyword, afterId: postId, completionHandler: { [weak self] (result) in
+            
+            self?.hideLoadingHUD()
+            
+            switch(result) {
+            case .success(let posts):
+                if posts.count > 0 {
+                    self?.posts?.append(contentsOf: posts)
+                }
+                
+            case .error(let error):
+                break
+            }
+        })
+    }
 }

@@ -21,4 +21,6 @@ enum DataRepositoryPostType {
  */
 protocol DataRepository {
     func getPosts(type: DataRepositoryPostType, forKeyword keyword: String, afterId: String?, completionHandler: @escaping (DataRepositoryResult<[Post]>) -> () )
+    
+    func getSavedFavorites(completionHandler: @escaping (DataRepositoryResult<[Favorite]>) -> ())
 }

@@ -32,8 +32,8 @@
 		A9BFC03B2578C8BC00B800C4 /* ListingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BFC03A2578C8BC00B800C4 /* ListingViewController.swift */; };
 		A9BFC0432578C8FA00B800C4 /* Master.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A9BFC0422578C8FA00B800C4 /* Master.storyboard */; };
 		A9BFC04B2578CA0700B800C4 /* FavoritesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BFC04A2578CA0700B800C4 /* FavoritesViewController.swift */; };
-		A9BFC0532578CD9200B800C4 /* LocalizedTitleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BFC0522578CD9200B800C4 /* LocalizedTitleViewController.swift */; };
-		A9BFC05B2578D79C00B800C4 /* DataAccessEnabledProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BFC05A2578D79C00B800C4 /* DataAccessEnabledProtocol.swift */; };
+		A9BFC0532578CD9200B800C4 /* TitleLocalizable.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BFC0522578CD9200B800C4 /* TitleLocalizable.swift */; };
+		A9BFC05B2578D79C00B800C4 /* DataRepositoryInjectable.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BFC05A2578D79C00B800C4 /* DataRepositoryInjectable.swift */; };
 		A9BFC0662578D94400B800C4 /* DataRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BFC0652578D94400B800C4 /* DataRepository.swift */; };
 		A9BFC07D2578DC8F00B800C4 /* GalleryItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BFC07C2578DC8E00B800C4 /* GalleryItemCell.swift */; };
 		A9BFC08A2578DD3600B800C4 /* GalleryItemCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9BFC0892578DD3500B800C4 /* GalleryItemCell.xib */; };
@@ -91,8 +91,8 @@
 		A9BFC03A2578C8BC00B800C4 /* ListingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListingViewController.swift; sourceTree = "<group>"; };
 		A9BFC0422578C8FA00B800C4 /* Master.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Master.storyboard; sourceTree = "<group>"; };
 		A9BFC04A2578CA0700B800C4 /* FavoritesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesViewController.swift; sourceTree = "<group>"; };
-		A9BFC0522578CD9200B800C4 /* LocalizedTitleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizedTitleViewController.swift; sourceTree = "<group>"; };
-		A9BFC05A2578D79C00B800C4 /* DataAccessEnabledProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataAccessEnabledProtocol.swift; sourceTree = "<group>"; };
+		A9BFC0522578CD9200B800C4 /* TitleLocalizable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleLocalizable.swift; sourceTree = "<group>"; };
+		A9BFC05A2578D79C00B800C4 /* DataRepositoryInjectable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataRepositoryInjectable.swift; sourceTree = "<group>"; };
 		A9BFC0652578D94400B800C4 /* DataRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataRepository.swift; sourceTree = "<group>"; };
 		A9BFC07C2578DC8E00B800C4 /* GalleryItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryItemCell.swift; sourceTree = "<group>"; };
 		A9BFC0892578DD3500B800C4 /* GalleryItemCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GalleryItemCell.xib; sourceTree = "<group>"; };
@@ -168,6 +168,23 @@
 			path = "Data Models";
 			sourceTree = "<group>";
 		};
+		A964816E257AEBC400CACA64 /* Protocols */ = {
+			isa = PBXGroup;
+			children = (
+				A9BFC05A2578D79C00B800C4 /* DataRepositoryInjectable.swift */,
+				A9BFC0522578CD9200B800C4 /* TitleLocalizable.swift */,
+			);
+			path = Protocols;
+			sourceTree = "<group>";
+		};
+		A9648175257AEDB300CACA64 /* Favorites */ = {
+			isa = PBXGroup;
+			children = (
+				A9BFC04A2578CA0700B800C4 /* FavoritesViewController.swift */,
+			);
+			path = Favorites;
+			sourceTree = "<group>";
+		};
 		A99876202577E373007C5EF9 = {
 			isa = PBXGroup;
 			children = (
@@ -193,6 +210,7 @@
 			children = (
 				A998762C2577E373007C5EF9 /* AppDelegate.swift */,
 				A998762E2577E373007C5EF9 /* SceneDelegate.swift */,
+				A964816E257AEBC400CACA64 /* Protocols */,
 				A9003DB82578479600402F62 /* Data Models */,
 				A9003DAA25783D6200402F62 /* Repositories */,
 				A99876622577E380007C5EF9 /* Network Layer */,
@@ -236,24 +254,22 @@
 		A9BFC0382578C86000B800C4 /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				A9BFC0422578C8FA00B800C4 /* Master.storyboard */,
+				A9BFC0392578C87500B800C4 /* Listing */,
+				A9648175257AEDB300CACA64 /* Favorites */,
 				A99876322577E373007C5EF9 /* Main.storyboard */,
 				A99876302577E373007C5EF9 /* MainViewController.swift */,
-				A9BFC0522578CD9200B800C4 /* LocalizedTitleViewController.swift */,
-				A9BFC05A2578D79C00B800C4 /* DataAccessEnabledProtocol.swift */,
-				A9BFC0392578C87500B800C4 /* Master */,
 			);
 			path = "View Controllers";
 			sourceTree = "<group>";
 		};
-		A9BFC0392578C87500B800C4 /* Master */ = {
+		A9BFC0392578C87500B800C4 /* Listing */ = {
 			isa = PBXGroup;
 			children = (
-				A9BFC0422578C8FA00B800C4 /* Master.storyboard */,
 				A9BFC07B2578DC6D00B800C4 /* Views */,
 				A9BFC03A2578C8BC00B800C4 /* ListingViewController.swift */,
-				A9BFC04A2578CA0700B800C4 /* FavoritesViewController.swift */,
 			);
-			path = Master;
+			path = Listing;
 			sourceTree = "<group>";
 		};
 		A9BFC07B2578DC6D00B800C4 /* Views */ = {
@@ -417,13 +433,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				A9003D922578236300402F62 /* ImageModel.swift in Sources */,
-				A9BFC05B2578D79C00B800C4 /* DataAccessEnabledProtocol.swift in Sources */,
+				A9BFC05B2578D79C00B800C4 /* DataRepositoryInjectable.swift in Sources */,
 				A9BFC09425793DCF00B800C4 /* EmptyView.swift in Sources */,
 				A9003D8525780EF300402F62 /* ChildDataModel.swift in Sources */,
 				A9003D7A25780D8E00402F62 /* ChildRootModel.swift in Sources */,
 				A9003D8A2578170500402F62 /* RedditResponse.swift in Sources */,
 				A9003DAC25783D7600402F62 /* RedditDataRepository.swift in Sources */,
-				A9BFC0532578CD9200B800C4 /* LocalizedTitleViewController.swift in Sources */,
+				A9BFC0532578CD9200B800C4 /* TitleLocalizable.swift in Sources */,
 				A9003D6A25780BD400402F62 /* ListingDataModel.swift in Sources */,
 				A9003D592578042F00402F62 /* ListingRootModel.swift in Sources */,
 				A99876312577E373007C5EF9 /* MainViewController.swift in Sources */,

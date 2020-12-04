@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-class FavoritesViewController: UIViewController, LocalizedTitleViewController, DataAccessEnabledProtocol {
+class FavoritesViewController: UIViewController, TitleLocalizable, DataRepositoryInjectable {
     var dataRepository: DataRepository?
     
     
