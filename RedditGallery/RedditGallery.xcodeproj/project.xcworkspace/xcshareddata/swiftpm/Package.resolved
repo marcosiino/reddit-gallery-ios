@@ -1,0 +1,16 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "MSLoadingHUD",
+        "repositoryURL": "https://github.com/marcosiino/MSLoadingHUD.git",
+        "state": {
+          "branch": null,
+          "revision": "f3887ed4c494566253c6cc5d2abdff7c29b79709",
+          "version": "0.2.0"
+        }
+      }
+    ]
+  },
+  "version": 1
+}

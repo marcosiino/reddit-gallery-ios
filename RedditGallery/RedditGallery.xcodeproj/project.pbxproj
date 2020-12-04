@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -17,6 +17,7 @@
 		A9003DAC25783D7600402F62 /* RedditDataRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9003DAB25783D7600402F62 /* RedditDataRepository.swift */; };
 		A9003DB1257842AF00402F62 /* CoreDataHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9003DB0257842AF00402F62 /* CoreDataHelper.swift */; };
 		A9003DBA257847B400402F62 /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9003DB9257847B400402F62 /* Post.swift */; };
+		A9648161257ADBB200CACA64 /* MSLoadingHUD in Frameworks */ = {isa = PBXBuildFile; productRef = A9648160257ADBB200CACA64 /* MSLoadingHUD */; };
 		A998762D2577E373007C5EF9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A998762C2577E373007C5EF9 /* AppDelegate.swift */; };
 		A998762F2577E373007C5EF9 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A998762E2577E373007C5EF9 /* SceneDelegate.swift */; };
 		A99876312577E373007C5EF9 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99876302577E373007C5EF9 /* MainViewController.swift */; };
@@ -105,6 +106,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A9648161257ADBB200CACA64 /* MSLoadingHUD in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -289,6 +291,9 @@
 			dependencies = (
 			);
 			name = RedditGallery;
+			packageProductDependencies = (
+				A9648160257ADBB200CACA64 /* MSLoadingHUD */,
+			);
 			productName = RedditGallery;
 			productReference = A99876292577E373007C5EF9 /* RedditGallery.app */;
 			productType = "com.apple.product-type.application";
@@ -361,6 +366,9 @@
 				it,
 			);
 			mainGroup = A99876202577E373007C5EF9;
+			packageReferences = (
+				A964815F257ADBB200CACA64 /* XCRemoteSwiftPackageReference "MSLoadingHUD" */,
+			);
 			productRefGroup = A998762A2577E373007C5EF9 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -776,6 +784,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		A964815F257ADBB200CACA64 /* XCRemoteSwiftPackageReference "MSLoadingHUD" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/marcosiino/MSLoadingHUD.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.1.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		A9648160257ADBB200CACA64 /* MSLoadingHUD */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A964815F257ADBB200CACA64 /* XCRemoteSwiftPackageReference "MSLoadingHUD" */;
+			productName = MSLoadingHUD;
+		};
+/* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
 		A99876352577E373007C5EF9 /* RedditGallery.xcdatamodeld */ = {

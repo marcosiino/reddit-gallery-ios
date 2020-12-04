@@ -7,8 +7,9 @@
 
 import Foundation
 import UIKit
+import MSLoadingHUD
 
-class ListingViewController: UIViewController, LocalizedTitleViewController, DataAccessEnabledProtocol {
+class ListingViewController: UIViewController, LocalizedTitleViewController, DataAccessEnabledProtocol, Loadable {
     
     var dataRepository: DataRepository?
     
@@ -82,10 +83,11 @@ class ListingViewController: UIViewController, LocalizedTitleViewController, Dat
         }
         
         lastSearchKeyword = keyword
-        UIApplication.shared.isNetworkActivityIndicatorVisible = true
         
+        showLoadingHUD(loadingMessage: "Searching images...")
         dataRepository?.getPosts(type: .top, forKeyword: keyword, afterId: nil, completionHandler: { [weak self] (result) in
-            UIApplication.shared.isNetworkActivityIndicatorVisible = false
+            
+            self?.hideLoadingHUD()
             
             switch(result) {
             case .success(let posts):
@@ -102,13 +104,18 @@ extension ListingViewController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
         
         let searchText = searchController.searchBar.text
+        guard searchText != lastSearchKeyword else {
+            return
+        }
         
         if let searchText = searchText {
             //Invalidate the previous timer (if any) and create a new timer which delays the search to avoid asking the DataRepository new items for every character typed
             searchTimer?.invalidate()
             searchTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: false, block: { [weak self] (timer) in
             
-                self?.search(keyword: searchText)
+                searchController.dismiss(animated: true) {
+                    self?.search(keyword: searchText)
+                }
             })
         }
     }
