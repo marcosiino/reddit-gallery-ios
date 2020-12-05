@@ -2,7 +2,7 @@
 //  Favorite+CoreDataClass.swift
 //  RedditGallery
 //
-//  Created by Marco Siino on 03/12/2020.
+//  Created by Marco Siino on 05/12/2020.
 //
 //
 

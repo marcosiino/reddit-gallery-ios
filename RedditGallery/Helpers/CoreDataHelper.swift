@@ -45,5 +45,62 @@ class CoreDataHelper {
         
         return true
     }
+
+    static func isFavorite(postId: String) -> Bool {
+        let request : NSFetchRequest<Favorite> = Favorite.fetchRequest()
+        request.predicate = NSPredicate(format: "postId == %@", postId)
+        
+        if let results = try? persistentContainer.viewContext.fetch(request), results.count > 0 {
+            return true
+        }
+        else {
+            return false
+        }
+        
+    }
     
+    static func saveFavorite(post: Post) -> Bool {
+        
+        let favorite = Favorite(context: persistentContainer.viewContext)
+        
+        favorite.title = post.title
+        favorite.author = post.author
+        favorite.postId = post.id
+        favorite.permalink = post.permalink
+        favorite.imageUrl = post.images.first
+        favorite.thumbnailUrl = post.thumbnail
+        
+        do {
+            try persistentContainer.viewContext.save()
+        }
+        catch(let error) {
+            print(error)
+            return false
+        }
+        
+        return true
+    }
+    
+    static func removeFavorite(postId: String) -> Bool {
+        let request : NSFetchRequest<Favorite> = Favorite.fetchRequest()
+        request.predicate = NSPredicate(format: "postId == %@", postId)
+        
+        if let results = try? persistentContainer.viewContext.fetch(request) {
+
+            do {
+                for favorite in results {
+                    try persistentContainer.viewContext.delete(favorite)
+                }
+                
+                try persistentContainer.viewContext.save()
+            }
+            catch(let error) {
+                print("Can't remove favorite from db")
+                //TODO: manage error
+                return false
+            }
+        }
+        
+        return true
+    }
 }

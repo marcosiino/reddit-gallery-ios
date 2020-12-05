@@ -65,8 +65,10 @@ class RedditDataRepository: DataRepository {
                             continue
                         }
                         
+                        let favorited = CoreDataHelper.isFavorite(postId: postId)
+                        
                         //Create an higher level data model of type Post
-                        let post = Post(id: postId, author: author, title: title, images: images, thumbnail: previewImage.decodeHtmlEncodedString(), ups: ups, downs: downs, permalink: permalink.decodeHtmlEncodedString())
+                        let post = Post(id: postId, author: author, title: title, images: images, thumbnail: previewImage.decodeHtmlEncodedString(), ups: ups, downs: downs, permalink: permalink.decodeHtmlEncodedString(), favorited: favorited)
                         posts.append(post)
                     }
                     
@@ -94,6 +96,18 @@ class RedditDataRepository: DataRepository {
     
     func getSavedFavorites(completionHandler: @escaping (DataRepositoryResult<[Favorite]>) -> ()) {
         //TODO
+    }
+    
+    func addFavorite(post: Post) -> Bool {
+        return CoreDataHelper.saveFavorite(post: post)
+    }
+    
+    func removeFavorite(postId: String) -> Bool {
+        return CoreDataHelper.removeFavorite(postId: postId)
+    }
+    
+    func removeFavorite(post: Post) -> Bool {
+        return removeFavorite(postId: post.id)
     }
     
     

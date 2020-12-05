@@ -45,7 +45,7 @@ class ImageRepository {
         //Otherwise, download it asynchronously, cache it and return it through the completion closure
         
         if let url = URL(string: url) {
-            
+
             session.dataTask(with: url) { [weak self] (data, response, error) in
                 DispatchQueue.main.async {
                     guard error == nil else {

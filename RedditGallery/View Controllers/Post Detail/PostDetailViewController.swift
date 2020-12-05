@@ -18,23 +18,25 @@ protocol PostDetailViewControllerDelegate: class {
     func didFinishLoadingPost(postDetailViewController: PostDetailViewController, post: Post)
 }
 
-class PostDetailViewController: UITableViewController {
+class PostDetailViewController: UITableViewController, DataRepositoryInjectable {
+    
     @IBOutlet weak var imageView: UIImageView?
     @IBOutlet weak var titleLabel: UILabel?
     @IBOutlet weak var authorLabel: UILabel?
     @IBOutlet weak var upsLabel: UILabel?
     @IBOutlet weak var downsLabel: UILabel?
+    @IBOutlet weak var favoriteButton: UIButton?
     
     var post: Post?
-    
+    var dataRepository: DataRepository?
     weak var delegate: PostDetailViewControllerDelegate?
     
-    static func instantiate(post: Post, delegate: PostDetailViewControllerDelegate) -> PostDetailViewController {
+    static func instantiate(post: Post, delegate: PostDetailViewControllerDelegate, dataRepository: DataRepository) -> PostDetailViewController {
         let vc = UIStoryboard(name: "PostDetail", bundle: nil).instantiateViewController(identifier: "PostDetailViewController") as! PostDetailViewController
         
         vc.post = post
         vc.delegate = delegate
-        
+        vc.dataRepository = dataRepository
         return vc
     }
     
@@ -42,10 +44,12 @@ class PostDetailViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        loadImage()
+        updateUI()
         tableView.estimatedRowHeight = 200.0
         tableView.rowHeight = UITableView.automaticDimension
-        
+    }
+    
+    private func updateUI() {
         if let post = post {
             titleLabel?.text = post.title
             authorLabel?.text = post.author
@@ -56,7 +60,21 @@ class PostDetailViewController: UITableViewController {
             upsLabel?.text = formatter.string(from: NSNumber(integerLiteral: post.ups))
             downsLabel?.text = formatter.string(from: NSNumber(integerLiteral: post.downs))
             
+            let symbolConf = UIImage.SymbolConfiguration(pointSize: 20.0, weight: .medium, scale: .large)
+            
+            if post.favorited {
+                let image = UIImage(systemName: "heart.fill", withConfiguration: symbolConf)
+                favoriteButton?.setImage(image, for: .normal)
+                favoriteButton?.tintColor = UIColor.systemRed
+            }
+            else {
+                let image = UIImage(systemName: "heart", withConfiguration: symbolConf)
+                favoriteButton?.setImage(image, for: .normal)
+                favoriteButton?.tintColor = UIColor.systemRed
+            }
         }
+        
+        loadImage()
     }
     
     private func loadImage() {
@@ -89,6 +107,29 @@ class PostDetailViewController: UITableViewController {
             }
         }
     }
+    
+    @IBAction func favoriteButtonTouched() {
+        guard post != nil else {
+            return
+        }
+        
+        if post!.favorited { //Is already favorite
+            //Remove from favorites
+            if let result = dataRepository?.removeFavorite(post: post!), result == true
+            {
+                post!.favorited = false
+                updateUI()
+            }
+        }
+        else { //Is not favorited
+            //Add as favorite
+            if let result = dataRepository?.addFavorite(post: post!), result == true {
+                post!.favorited = true
+                updateUI()
+            }
+        }
+    }
+
 }
 
 extension PostDetailViewController {

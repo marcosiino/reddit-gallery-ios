@@ -23,4 +23,7 @@ protocol DataRepository {
     func getPosts(type: DataRepositoryPostType, forKeyword keyword: String, afterId: String?, completionHandler: @escaping (DataRepositoryResult<[Post]>) -> () )
     
     func getSavedFavorites(completionHandler: @escaping (DataRepositoryResult<[Favorite]>) -> ())
+    func addFavorite(post: Post) -> Bool
+    func removeFavorite(postId: String) -> Bool
+    func removeFavorite(post: Post) -> Bool
 }

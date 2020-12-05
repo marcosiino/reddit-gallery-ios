@@ -163,8 +163,8 @@ extension ListingViewController: UICollectionViewDataSource, UICollectionViewDel
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
-        if let posts = posts {
-            let detailVC = PostsPageViewController(posts: posts, initialPostIndex: indexPath.row, delegate: self)
+        if let posts = posts, let dataRepository = dataRepository {
+            let detailVC = PostsPageViewController(posts: posts, initialPostIndex: indexPath.row, delegate: self, dataRepository: dataRepository)
             navigationController?.pushViewController(detailVC, animated: true)
         }
     }

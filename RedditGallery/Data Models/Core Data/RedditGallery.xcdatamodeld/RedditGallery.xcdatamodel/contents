@@ -6,14 +6,14 @@
     </entity>
     <entity name="Favorite" representedClassName="Favorite" syncable="YES" codeGenerationType="class">
         <attribute name="author" optional="YES" attributeType="String"/>
-        <attribute name="image" optional="YES" attributeType="Binary"/>
+        <attribute name="imageUrl" optional="YES" attributeType="String"/>
         <attribute name="permalink" optional="YES" attributeType="String"/>
         <attribute name="postId" optional="YES" attributeType="String"/>
-        <attribute name="thumbnail" optional="YES" attributeType="Binary"/>
+        <attribute name="thumbnailUrl" optional="YES" attributeType="String"/>
         <attribute name="title" optional="YES" attributeType="String"/>
     </entity>
     <elements>
-        <element name="Favorite" positionX="-63" positionY="-18" width="128" height="133"/>
         <element name="CachedImage" positionX="94.1875" positionY="-1.40625" width="128" height="73"/>
+        <element name="Favorite" positionX="-63" positionY="-18" width="128" height="133"/>
     </elements>
 </model>

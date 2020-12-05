@@ -17,13 +17,13 @@ protocol PostsPageViewControllerDelegate: class {
     func didFinishLoadingPostData()
 }
 
-class PostsPageViewController: UIPageViewController {
-    
+class PostsPageViewController: UIPageViewController, DataRepositoryInjectable {
     private let posts: [Post]
     private var currentPostIndex: Int = 0
+    var dataRepository: DataRepository?
     weak var postsPagesDelegate: PostsPageViewControllerDelegate?
     
-    init(posts _posts: [Post], initialPostIndex index: Int, delegate _del: PostsPageViewControllerDelegate) {
+    init(posts _posts: [Post], initialPostIndex index: Int, delegate _del: PostsPageViewControllerDelegate, dataRepository: DataRepository) {
         
         posts = _posts
         if currentPostIndex < posts.count {
@@ -35,6 +35,7 @@ class PostsPageViewController: UIPageViewController {
         
         postsPagesDelegate = _del
         
+        self.dataRepository = dataRepository
         
         super.init(transitionStyle: .scroll, navigationOrientation: .horizontal, options: [:])
         dataSource = self
@@ -61,8 +62,12 @@ class PostsPageViewController: UIPageViewController {
             return nil
         }
         
+        guard let dataRepository = dataRepository else {
+            return nil
+        }
+        
         //An item which is not the first or the last
-        let currentPageVC = PostDetailViewController.instantiate(post: posts[index], delegate: self)
+        let currentPageVC = PostDetailViewController.instantiate(post: posts[index], delegate: self, dataRepository: dataRepository)
         
         return currentPageVC
     }
