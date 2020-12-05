@@ -50,7 +50,7 @@ class PostsPageViewController: UIPageViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-    
+        
         if let vc = instantiateDetailViewController(forPostAtIndex: currentPostIndex) {
             setViewControllers([vc], direction: .forward, animated: true, completion: nil)
         }

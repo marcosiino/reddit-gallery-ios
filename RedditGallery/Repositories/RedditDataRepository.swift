@@ -47,7 +47,7 @@ class RedditDataRepository: DataRepository {
                         
                         let data = child.data
                         
-                        guard let postId = data.id, let author = data.author, let title = data.title, let thumbnail = data.thumbnail, let ups = data.ups, let downs = data.downs, let permalink = data.permalink else {
+                        guard let postId = data.id, let author = data.author, let title = data.title, let ups = data.ups, let downs = data.downs, let permalink = data.permalink else {
                             continue
                         }
                         
@@ -61,8 +61,12 @@ class RedditDataRepository: DataRepository {
                             continue
                         }
                         
+                        guard let previewImage = data.preview?.images.first?.smaller?.url else {
+                            continue
+                        }
+                        
                         //Create an higher level data model of type Post
-                        let post = Post(id: postId, author: author, title: title, images: images, thumbnail: thumbnail.decodeHtmlEncodedString(), ups: ups, downs: downs, permalink: permalink.decodeHtmlEncodedString())
+                        let post = Post(id: postId, author: author, title: title, images: images, thumbnail: previewImage.decodeHtmlEncodedString(), ups: ups, downs: downs, permalink: permalink.decodeHtmlEncodedString())
                         posts.append(post)
                     }
                     
