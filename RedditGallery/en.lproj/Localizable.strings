@@ -13,10 +13,10 @@
 
 "listing.searchingLoadingHUDText" = "Downloading images from /r/%@...";
 "listing.loadingMoreResults" = "Loading more results...";
-
-"listings.title" = "Gallery";
-"listings.searchbar.placeholder" = "Subreddit (i.e. cats)";
+"gallery.searchbar.placeholder" = "Subreddit (i.e. cats)...";
+"gallery.title" = "Gallery";
 
 "postDetail.loadingImageFailedMessage" = "Failed to load image";
 
-"favorites.title" = "Favorites";"
+"favorites.title" = "Favorites";
+"favorites.searchbar.placeholder" = "Title or author...";

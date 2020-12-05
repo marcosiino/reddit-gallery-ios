@@ -17,13 +17,17 @@ class RedditDataRepository: DataRepository {
     private var dataTask: URLSessionTask?
     
     /**
-     Retrieves the speciefied posts using the rest client and provide higher level models
-     - type: The type of posts to query
-     - forKeyword: the keyword to query (i.e. cats)
+     Retrieves posts using the rest client and provide higher level models
+     - forKeyword: the subreddit to query (i.e. cats)
      - completionHandler: the completion closure which returns the queried Posts. This closure is called in the main queue
      */
     
-    func getPosts(type: DataRepositoryPostType, forKeyword keyword: String, afterId: String? = nil, completionHandler: @escaping (DataRepositoryResult<[Post]>) -> () ) {
+    func getPosts(searchKeyword keyword: String, afterId: String? = nil, completionHandler: @escaping (DataRepositoryResult<[Post]>) -> () ) {
+        
+        if keyword.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines) == "" {
+            completionHandler(.success([Post]()))
+            return
+        }
         
         //Cancel the previous request, if any
         if let dataTask = dataTask {
@@ -65,8 +69,10 @@ class RedditDataRepository: DataRepository {
                             continue
                         }
                         
+                        let favorited = CoreDataHelper.isFavorite(postId: postId)
+                        
                         //Create an higher level data model of type Post
-                        let post = Post(id: postId, author: author, title: title, images: images, thumbnail: previewImage.decodeHtmlEncodedString(), ups: ups, downs: downs, permalink: permalink.decodeHtmlEncodedString())
+                        let post = Post(id: postId, author: author, title: title, images: images, thumbnail: previewImage.decodeHtmlEncodedString(), ups: ups, downs: downs, permalink: permalink.decodeHtmlEncodedString(), favorited: favorited)
                         posts.append(post)
                     }
                     
@@ -92,9 +98,8 @@ class RedditDataRepository: DataRepository {
         }
     }
     
-    func getSavedFavorites(completionHandler: @escaping (DataRepositoryResult<[Favorite]>) -> ()) {
-        //TODO
+    func supportsPaging() -> Bool {
+        return true
     }
-    
     
 }

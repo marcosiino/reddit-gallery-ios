@@ -15,9 +15,11 @@
 "listing.searchingLoadingHUDText" = "Downloading da /r/%@...";
 "listing.loadingMoreResults" = "Download delle immagini successive...";
 
-"listings.title" = "Galleria";
-"listings.searchbar.placeholder" = "Subreddit (es. cats)";
+"gallery.searchbar.placeholder" = "Subreddit (es. cats)...";
+
+"gallery.title" = "Galleria";
 
 "postDetail.loadingImageFailedMessage" = "Errore durante il caricamento dell'immagine";
 
 "favorites.title" = "Preferiti";
+"favorites.searchbar.placeholder" = "Titolo o autore...";
