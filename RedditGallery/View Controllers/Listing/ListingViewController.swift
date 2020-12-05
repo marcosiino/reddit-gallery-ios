@@ -161,12 +161,22 @@ extension ListingViewController: UICollectionViewDataSource, UICollectionViewDel
         }
     }
     
-    private func loadMoreResults(afterPostId postId: String) {
-        showLoadingHUD(loadingMessage: NSLocalizedString("listing.loadingMoreResults", comment: "listing.loadingMoreResults"))
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
+        if let posts = posts {
+            let detailVC = PostsPageViewController(posts: posts, initialPostIndex: indexPath.row, delegate: self)
+            navigationController?.pushViewController(detailVC, animated: true)
+        }
+    }
+    
+    private func loadMoreResults(afterPostId postId: String) {
+        //showLoadingHUD(loadingMessage: NSLocalizedString("listing.loadingMoreResults", comment: "listing.loadingMoreResults"))
+        
+        UIApplication.shared.isNetworkActivityIndicatorVisible = true
         dataRepository?.getPosts(type: .top, forKeyword: lastSearchKeyword, afterId: postId, completionHandler: { [weak self] (result) in
             
-            self?.hideLoadingHUD()
+            //self?.hideLoadingHUD()
+            UIApplication.shared.isNetworkActivityIndicatorVisible = false
             
             switch(result) {
             case .success(let posts):
@@ -178,5 +188,15 @@ extension ListingViewController: UICollectionViewDataSource, UICollectionViewDel
                 break
             }
         })
+    }
+}
+
+extension ListingViewController: PostsPageViewControllerDelegate {
+    func didStartLoadingPostData() {
+        showLoadingHUD()
+    }
+    
+    func didFinishLoadingPostData() {
+        hideLoadingHUD()
     }
 }

@@ -8,10 +8,15 @@
 
 "generic.noResults" = "There are no images in this subreddit";
 "generic.initialEmptyMessage" = "Type a subreddit in the search box to show its images";
+"generic.error" = "Error";
+"generic.ok" = "Ok";
+
 "listing.searchingLoadingHUDText" = "Downloading images from /r/%@...";
 "listing.loadingMoreResults" = "Loading more results...";
 
 "listings.title" = "Gallery";
 "listings.searchbar.placeholder" = "Subreddit (i.e. cats)";
+
+"postDetail.loadingImageFailedMessage" = "Failed to load image";
 
 "favorites.title" = "Favorites";"

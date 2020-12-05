@@ -17,7 +17,6 @@ class GalleryItemCell: UICollectionViewCell {
         imageView?.image = noImage
         
         if let thumbnail = post.thumbnail {
-            
             ImageRepository.sharedInstance.getImage(url: thumbnail) { [weak self] (result) in
                 switch(result) {
                 case .success(let image):

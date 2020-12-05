@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17126"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Image Viewer View Controller-->
+        <scene sceneID="hVn-5R-ed8">
+            <objects>
+                <viewController storyboardIdentifier="ImageViewerViewController" id="Pj7-lU-PJx" customClass="ImageViewerViewController" customModule="RedditGallery" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="ZOX-zL-7Wr">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="KHC-Pm-MvP">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                                <subviews>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="LRy-tB-V2c">
+                                        <rect key="frame" x="0.0" y="39" width="414" height="818"/>
+                                    </imageView>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstItem="LRy-tB-V2c" firstAttribute="width" secondItem="KHC-Pm-MvP" secondAttribute="width" id="5Zn-U9-cHo"/>
+                                    <constraint firstItem="LRy-tB-V2c" firstAttribute="centerX" secondItem="KHC-Pm-MvP" secondAttribute="centerX" id="bJT-fJ-pOU"/>
+                                    <constraint firstItem="LRy-tB-V2c" firstAttribute="centerY" secondItem="KHC-Pm-MvP" secondAttribute="centerY" id="lYt-sI-jdr"/>
+                                    <constraint firstItem="LRy-tB-V2c" firstAttribute="height" secondItem="KHC-Pm-MvP" secondAttribute="height" multiplier="0.912946" id="uox-Lb-Bwu"/>
+                                </constraints>
+                                <viewLayoutGuide key="contentLayoutGuide" id="om6-sY-58f"/>
+                                <viewLayoutGuide key="frameLayoutGuide" id="hnd-Q1-msd"/>
+                                <connections>
+                                    <outlet property="delegate" destination="Pj7-lU-PJx" id="CFF-MO-h1M"/>
+                                </connections>
+                            </scrollView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8FK-Ca-V0l">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                            </view>
+                            <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="68w-sT-ZWZ">
+                                <rect key="frame" x="0.0" y="44" width="414" height="44"/>
+                                <items>
+                                    <navigationItem id="PCa-hO-mit">
+                                        <barButtonItem key="rightBarButtonItem" image="xmark" catalog="system" id="OWP-fS-tCT">
+                                            <color key="tintColor" systemColor="secondaryLabelColor"/>
+                                            <connections>
+                                                <action selector="close" destination="Pj7-lU-PJx" id="uln-Y0-TKn"/>
+                                            </connections>
+                                        </barButtonItem>
+                                    </navigationItem>
+                                </items>
+                            </navigationBar>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="a4D-KT-yXN"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="KHC-Pm-MvP" firstAttribute="leading" secondItem="a4D-KT-yXN" secondAttribute="leading" id="5jz-vU-qgh"/>
+                            <constraint firstItem="68w-sT-ZWZ" firstAttribute="leading" secondItem="a4D-KT-yXN" secondAttribute="leading" id="A6L-jw-eb5"/>
+                            <constraint firstItem="68w-sT-ZWZ" firstAttribute="top" secondItem="8FK-Ca-V0l" secondAttribute="bottom" id="GoC-e1-lap"/>
+                            <constraint firstItem="KHC-Pm-MvP" firstAttribute="bottom" secondItem="ZOX-zL-7Wr" secondAttribute="bottom" id="RFU-Vm-dMl"/>
+                            <constraint firstAttribute="top" secondItem="KHC-Pm-MvP" secondAttribute="top" id="XPC-Sr-kv8"/>
+                            <constraint firstItem="8FK-Ca-V0l" firstAttribute="leading" secondItem="a4D-KT-yXN" secondAttribute="leading" id="c4P-Jd-aAr"/>
+                            <constraint firstAttribute="top" secondItem="8FK-Ca-V0l" secondAttribute="top" id="d3a-Gp-Dxh"/>
+                            <constraint firstItem="68w-sT-ZWZ" firstAttribute="top" secondItem="a4D-KT-yXN" secondAttribute="top" id="tRW-3m-5MW"/>
+                            <constraint firstItem="a4D-KT-yXN" firstAttribute="trailing" secondItem="68w-sT-ZWZ" secondAttribute="trailing" id="xxL-uD-ctk"/>
+                            <constraint firstItem="a4D-KT-yXN" firstAttribute="trailing" secondItem="8FK-Ca-V0l" secondAttribute="trailing" id="yD1-H9-hSd"/>
+                            <constraint firstItem="a4D-KT-yXN" firstAttribute="trailing" secondItem="KHC-Pm-MvP" secondAttribute="trailing" id="ydK-VX-e4n"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="imageView" destination="LRy-tB-V2c" id="UlQ-2d-yee"/>
+                        <outlet property="scrollView" destination="KHC-Pm-MvP" id="WxN-Pl-xr6"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="e0n-Eh-y45" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-314.49275362318843" y="44.866071428571423"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="xmark" catalog="system" width="128" height="113"/>
+        <systemColor name="secondaryLabelColor">
+            <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>

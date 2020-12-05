@@ -23,6 +23,15 @@ class ImageRepository {
     
     let session = URLSession(configuration: URLSessionConfiguration.default)
     
+    func isCached(url: String) -> Bool {
+        if let cachedImage = CoreDataHelper.getCachedImage(url: url), let _ = cachedImage.image {
+            return true
+        }
+        else {
+            return false
+        }
+    }
+    
     func getImage(url: String, completion: @escaping (Result) -> ()) {
         
         //If the image is cached
