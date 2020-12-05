@@ -161,6 +161,14 @@ extension ListingViewController: UICollectionViewDataSource, UICollectionViewDel
         }
     }
     
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
+        if let posts = posts {
+            let detailVC = PostsPageViewController(posts: posts, currentPostIndex: indexPath.row, delegate: self)
+            navigationController?.pushViewController(detailVC, animated: true)
+        }
+    }
+    
     private func loadMoreResults(afterPostId postId: String) {
         showLoadingHUD(loadingMessage: NSLocalizedString("listing.loadingMoreResults", comment: "listing.loadingMoreResults"))
         
@@ -178,5 +186,15 @@ extension ListingViewController: UICollectionViewDataSource, UICollectionViewDel
                 break
             }
         })
+    }
+}
+
+extension ListingViewController: PostsPageViewControllerDelegate {
+    func didStartLoadingPostData() {
+        showLoadingHUD()
+    }
+    
+    func didFinishLoadingPostData() {
+        hideLoadingHUD()
     }
 }

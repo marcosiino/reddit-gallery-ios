@@ -8,10 +8,16 @@
 
 "generic.noResults" = "Non ci sono immagini in questo subreddit";
 "generic.initialEmptyMessage" = "Digita il nome di un subreddit nel campo di ricerca per visualizzare le immagini all'interno";
+"generic.error" = "Errore";
+"generic.ok" = "Ok";
+
+
 "listing.searchingLoadingHUDText" = "Downloading da /r/%@...";
 "listing.loadingMoreResults" = "Download delle immagini successive...";
 
 "listings.title" = "Galleria";
 "listings.searchbar.placeholder" = "Subreddit (es. cats)";
+
+"postDetail.loadingImageFailedMessage" = "Errore durante il caricamento dell'immagine";
 
 "favorites.title" = "Preferiti";

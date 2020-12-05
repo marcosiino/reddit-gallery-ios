@@ -42,6 +42,8 @@
 		A9BFC09F25794A1200B800C4 /* ImageRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BFC09E25794A1200B800C4 /* ImageRepository.swift */; };
 		A9EFB78E257B7AE000037FAD /* PostDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9EFB78D257B7AE000037FAD /* PostDetailViewController.swift */; };
 		A9EFB79A257B7BC200037FAD /* Favorites.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A9EFB799257B7BC200037FAD /* Favorites.storyboard */; };
+		A9EFB7AE257B7D1100037FAD /* PostDetail.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A9EFB7AD257B7D1100037FAD /* PostDetail.storyboard */; };
+		A9EFB7B6257B8D3200037FAD /* PostsPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9EFB7B5257B8D3200037FAD /* PostsPageViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -103,6 +105,8 @@
 		A9BFC09E25794A1200B800C4 /* ImageRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageRepository.swift; sourceTree = "<group>"; };
 		A9EFB78D257B7AE000037FAD /* PostDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostDetailViewController.swift; sourceTree = "<group>"; };
 		A9EFB799257B7BC200037FAD /* Favorites.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Favorites.storyboard; sourceTree = "<group>"; };
+		A9EFB7AD257B7D1100037FAD /* PostDetail.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = PostDetail.storyboard; sourceTree = "<group>"; };
+		A9EFB7B5257B8D3200037FAD /* PostsPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostsPageViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -300,7 +304,9 @@
 		A9EFB792257B7AEF00037FAD /* Post Detail */ = {
 			isa = PBXGroup;
 			children = (
+				A9EFB7AD257B7D1100037FAD /* PostDetail.storyboard */,
 				A9EFB78D257B7AE000037FAD /* PostDetailViewController.swift */,
+				A9EFB7B5257B8D3200037FAD /* PostsPageViewController.swift */,
 			);
 			path = "Post Detail";
 			sourceTree = "<group>";
@@ -419,6 +425,7 @@
 				A9BFC0312578C70900B800C4 /* Localizable.strings in Resources */,
 				A99876392577E377007C5EF9 /* Assets.xcassets in Resources */,
 				A9BFC08F25793DC500B800C4 /* EmptyView.xib in Resources */,
+				A9EFB7AE257B7D1100037FAD /* PostDetail.storyboard in Resources */,
 				A9BFC0432578C8FA00B800C4 /* Listing.storyboard in Resources */,
 				A99876342577E373007C5EF9 /* Main.storyboard in Resources */,
 				A9EFB79A257B7BC200037FAD /* Favorites.storyboard in Resources */,
@@ -447,6 +454,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A9EFB7B6257B8D3200037FAD /* PostsPageViewController.swift in Sources */,
 				A9003D922578236300402F62 /* ImageModel.swift in Sources */,
 				A9EFB78E257B7AE000037FAD /* PostDetailViewController.swift in Sources */,
 				A9BFC05B2578D79C00B800C4 /* DataRepositoryInjectable.swift in Sources */,

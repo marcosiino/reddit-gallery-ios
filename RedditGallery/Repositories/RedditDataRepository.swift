@@ -51,18 +51,18 @@ class RedditDataRepository: DataRepository {
                             continue
                         }
                         
-                        let mediumResImages = data.preview?.images.map({ (imageSet) -> String in
-                            let image = imageSet.medium ?? imageSet.original
+                        let images = data.preview?.images.map({ (imageSet) -> String in
+                            let image = imageSet.original
                             return image.url.decodeHtmlEncodedString()
                         }) ?? [String]()
                         
                         //If this post doesn't have a thumbnail and at least an image, skip it
-                        guard mediumResImages.count > 0 else {
+                        guard images.count > 0 else {
                             continue
                         }
                         
                         //Create an higher level data model of type Post
-                        let post = Post(id: postId, author: author, title: title, images: mediumResImages, thumbnail: thumbnail.decodeHtmlEncodedString(), ups: ups, downs: downs, permalink: permalink.decodeHtmlEncodedString())
+                        let post = Post(id: postId, author: author, title: title, images: images, thumbnail: thumbnail.decodeHtmlEncodedString(), ups: ups, downs: downs, permalink: permalink.decodeHtmlEncodedString())
                         posts.append(post)
                     }
                     
