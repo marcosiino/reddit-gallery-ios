@@ -10,7 +10,7 @@
         <!--ListingViewController-->
         <scene sceneID="GE4-l7-to7">
             <objects>
-                <viewControllerPlaceholder storyboardName="Master" referencedIdentifier="ListingViewController" id="b6h-SF-Xra" sceneMemberID="viewController">
+                <viewControllerPlaceholder storyboardName="Listing" referencedIdentifier="ListingViewController" id="b6h-SF-Xra" sceneMemberID="viewController">
                     <navigationItem key="navigationItem" id="kF2-7D-hJD"/>
                 </viewControllerPlaceholder>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cbY-aT-Gb4" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -20,7 +20,7 @@
         <!--FavoritesViewController-->
         <scene sceneID="VI6-Tk-cqY">
             <objects>
-                <viewControllerPlaceholder storyboardName="Master" referencedIdentifier="FavoritesViewController" id="9qX-tD-zKr" sceneMemberID="viewController">
+                <viewControllerPlaceholder storyboardName="Favorites" referencedIdentifier="FavoritesViewController" id="9qX-tD-zKr" sceneMemberID="viewController">
                     <navigationItem key="navigationItem" id="jNZ-OO-YKK"/>
                 </viewControllerPlaceholder>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="3l2-4d-9md" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
