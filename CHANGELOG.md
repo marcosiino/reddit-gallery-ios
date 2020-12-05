@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.0 - 2020-12-05
+
+### New features
+
+Implemented the ability to add posts to favorites.
+
 ## 0.2.0 - 2020-12-05
 
 ### New features
