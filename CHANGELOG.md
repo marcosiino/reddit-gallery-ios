@@ -2,7 +2,7 @@
 
 ## 0.2.0 - 2020-12-05
 
-# New features
+### New features
 
 Implemented a detail screen which shows the image and some post data
 
