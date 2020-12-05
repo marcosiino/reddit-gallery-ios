@@ -23,7 +23,7 @@ class PostsPageViewController: UIPageViewController {
     private var currentPostIndex: Int = 0
     weak var postsPagesDelegate: PostsPageViewControllerDelegate?
     
-    init(posts _posts: [Post], currentPostIndex index: Int, delegate _del: PostsPageViewControllerDelegate) {
+    init(posts _posts: [Post], initialPostIndex index: Int, delegate _del: PostsPageViewControllerDelegate) {
         
         posts = _posts
         if currentPostIndex < posts.count {
@@ -34,6 +34,7 @@ class PostsPageViewController: UIPageViewController {
         }
         
         postsPagesDelegate = _del
+        
         
         super.init(transitionStyle: .scroll, navigationOrientation: .horizontal, options: [:])
         dataSource = self
@@ -49,9 +50,21 @@ class PostsPageViewController: UIPageViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+    
+        if let vc = instantiateDetailViewController(forPostAtIndex: currentPostIndex) {
+            setViewControllers([vc], direction: .forward, animated: true, completion: nil)
+        }
+    }
+    
+    private func instantiateDetailViewController(forPostAtIndex index: Int) -> PostDetailViewController? {
+        guard index < posts.count && index >= 0 else {
+            return nil
+        }
         
-        let currentPost = posts[currentPostIndex]
-        setViewControllers([PostDetailViewController.instantiate(post: currentPost, delegate: self)], direction: .forward, animated: true, completion: nil)
+        //An item which is not the first or the last
+        let currentPageVC = PostDetailViewController.instantiate(post: posts[index], delegate: self)
+        
+        return currentPageVC
     }
 }
 
@@ -68,25 +81,31 @@ extension PostsPageViewController: PostDetailViewControllerDelegate {
 extension PostsPageViewController: UIPageViewControllerDataSource {
     
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
-        if currentPostIndex + 1 < posts.count {
-            currentPostIndex += 1
-            return PostDetailViewController.instantiate(post: posts[currentPostIndex], delegate: self)
-        }
-        else {
-            return nil
+        
+        if let viewController = viewController as? PostDetailViewController, let post = viewController.post {
+            if let index = posts.firstIndex(of: post) { //The index of the post that this viewController is showing
+                
+                if index+1 < posts.count {
+                    return instantiateDetailViewController(forPostAtIndex: index + 1)
+                }
+            }
         }
         
+        return nil
     }
     
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
-        if currentPostIndex - 1 >= 0 {
-            currentPostIndex -= 1
-            
-            return PostDetailViewController.instantiate(post: posts[currentPostIndex], delegate: self)
+        
+        if let viewController = viewController as? PostDetailViewController, let post = viewController.post {
+            if let index = posts.firstIndex(of: post) { //The index of the post that this viewController is showing
+                
+                if index - 1 >= 0 {
+                    return instantiateDetailViewController(forPostAtIndex: index - 1)
+                }
+            }
         }
-        else {
-            return nil
-        }
+        
+        return nil
     }
     
     func presentationCount(for pageViewController: UIPageViewController) -> Int {

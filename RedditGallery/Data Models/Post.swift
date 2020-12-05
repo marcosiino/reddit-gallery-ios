@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Post {
+struct Post: Equatable {
     let id: String
     let author: String
     let title: String
@@ -16,4 +16,8 @@ struct Post {
     let ups: Int
     let downs: Int
     let permalink: String
+    
+    static func == (lhs: Self, rhs: Self) -> Bool {
+        return lhs.id == rhs.id
+    }
 }

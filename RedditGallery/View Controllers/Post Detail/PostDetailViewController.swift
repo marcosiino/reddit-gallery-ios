@@ -23,7 +23,9 @@ class PostDetailViewController: UIViewController {
     @IBOutlet weak var scrollView: UIScrollView?
     
     var post: Post?
+    
     weak var delegate: PostDetailViewControllerDelegate?
+    
     
     static func instantiate(post: Post, delegate: PostDetailViewControllerDelegate) -> PostDetailViewController {
         let vc = UIStoryboard(name: "PostDetail", bundle: nil).instantiateViewController(identifier: "PostDetailViewController") as! PostDetailViewController
@@ -47,14 +49,21 @@ class PostDetailViewController: UIViewController {
         
         if let post = post, let imageUrl = post.images.first {
             
-            delegate?.didStartLoadingPost(postDetailViewController: self, post: post)
+            let isCached = ImageRepository.sharedInstance.isCached(url: imageUrl)
+            
+            //Only show the loading HUD if the image is not cached (it would require time 
+            if isCached == false {
+                delegate?.didStartLoadingPost(postDetailViewController: self, post: post)
+            }
             
             ImageRepository.sharedInstance.getImage(url: imageUrl) { [weak self] (result) in
                 guard let self = self else {
                     return
                 }
-                
-                self.delegate?.didFinishLoadingPost(postDetailViewController: self, post: post)
+             
+                if isCached == false {
+                    self.delegate?.didFinishLoadingPost(postDetailViewController: self, post: post)
+                }
                 
                 switch(result) {
                 case .success(let image):

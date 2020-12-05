@@ -41,8 +41,8 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="KHC-Pm-MvP" firstAttribute="leading" secondItem="a4D-KT-yXN" secondAttribute="leading" id="5jz-vU-qgh"/>
-                            <constraint firstItem="KHC-Pm-MvP" firstAttribute="bottom" secondItem="a4D-KT-yXN" secondAttribute="bottom" constant="34" id="RFU-Vm-dMl"/>
-                            <constraint firstItem="a4D-KT-yXN" firstAttribute="top" secondItem="KHC-Pm-MvP" secondAttribute="top" constant="44" id="XPC-Sr-kv8"/>
+                            <constraint firstItem="KHC-Pm-MvP" firstAttribute="bottom" secondItem="ZOX-zL-7Wr" secondAttribute="bottom" id="RFU-Vm-dMl"/>
+                            <constraint firstAttribute="top" secondItem="KHC-Pm-MvP" secondAttribute="top" id="XPC-Sr-kv8"/>
                             <constraint firstItem="a4D-KT-yXN" firstAttribute="trailing" secondItem="KHC-Pm-MvP" secondAttribute="trailing" id="ydK-VX-e4n"/>
                         </constraints>
                     </view>

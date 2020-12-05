@@ -164,17 +164,19 @@ extension ListingViewController: UICollectionViewDataSource, UICollectionViewDel
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
         if let posts = posts {
-            let detailVC = PostsPageViewController(posts: posts, currentPostIndex: indexPath.row, delegate: self)
+            let detailVC = PostsPageViewController(posts: posts, initialPostIndex: indexPath.row, delegate: self)
             navigationController?.pushViewController(detailVC, animated: true)
         }
     }
     
     private func loadMoreResults(afterPostId postId: String) {
-        showLoadingHUD(loadingMessage: NSLocalizedString("listing.loadingMoreResults", comment: "listing.loadingMoreResults"))
+        //showLoadingHUD(loadingMessage: NSLocalizedString("listing.loadingMoreResults", comment: "listing.loadingMoreResults"))
         
+        UIApplication.shared.isNetworkActivityIndicatorVisible = true
         dataRepository?.getPosts(type: .top, forKeyword: lastSearchKeyword, afterId: postId, completionHandler: { [weak self] (result) in
             
-            self?.hideLoadingHUD()
+            //self?.hideLoadingHUD()
+            UIApplication.shared.isNetworkActivityIndicatorVisible = false
             
             switch(result) {
             case .success(let posts):
