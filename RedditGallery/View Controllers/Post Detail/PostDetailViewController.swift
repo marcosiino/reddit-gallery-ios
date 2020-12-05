@@ -57,8 +57,14 @@ class PostDetailViewController: UITableViewController, DataRepositoryInjectable 
             let formatter = NumberFormatter()
             formatter.locale = Locale.current
             
-            upsLabel?.text = formatter.string(from: NSNumber(integerLiteral: post.ups))
-            downsLabel?.text = formatter.string(from: NSNumber(integerLiteral: post.downs))
+            if let ups = post.ups, let downs = post.downs {
+                upsLabel?.text = formatter.string(from: NSNumber(integerLiteral: ups))
+                downsLabel?.text = formatter.string(from: NSNumber(integerLiteral: downs))
+            }
+            else {
+                upsLabel?.text = ""
+                downsLabel?.text = ""
+            }
             
             let symbolConf = UIImage.SymbolConfiguration(pointSize: 20.0, weight: .medium, scale: .large)
             

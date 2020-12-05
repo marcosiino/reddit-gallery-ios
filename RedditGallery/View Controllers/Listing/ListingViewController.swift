@@ -9,32 +9,73 @@ import Foundation
 import UIKit
 import MSLoadingHUD
 
-class ListingViewController: UIViewController, TitleLocalizable, DataRepositoryInjectable, Loadable {
+class ListingViewController: UIViewController, DataRepositoryInjectable, Loadable {
     
-    var dataRepository: DataRepository?
     
     private var searchController: UISearchController?
     private var searchTimer: Timer?
-    private var lastSearchKeyword: String = ""
-    private var posts: [Post]? {
+    private var emptyView: EmptyView?
+    
+    var dataRepository: DataRepository?
+    var lastSearchKeyword: String?
+    var posts: [Post]? {
         didSet {
             updateUI()
         }
     }
     
-    private var emptyView: EmptyView?
+    var collectionView: UICollectionView?
     
-    @IBOutlet weak var collectionView: UICollectionView?
+    init(dataRepository: DataRepository) {
+        self.dataRepository = dataRepository
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func loadView() {
+        view = UIView()
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        setupUI()
+
+        search(keyword: "")
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(favoritesChanged), name: .favoritesChanged, object: nil)
+        
+    }
+    
+    func setupUI() {
+        view.backgroundColor = UIColor.white
+        navigationController?.view.backgroundColor = UIColor.white
+        
+        collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: UICollectionViewFlowLayout())
+        collectionView?.backgroundColor = UIColor.white
+        collectionView?.translatesAutoresizingMaskIntoConstraints = false
+        collectionView?.delegate = self
+        collectionView?.dataSource = self
+        view.addSubview(collectionView!)
+        
+        collectionView?.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
+        collectionView?.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
+        collectionView?.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        collectionView?.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        
         let searchController = UISearchController(searchResultsController: nil)
         searchController.searchResultsUpdater = self
-        searchController.searchBar.placeholder = NSLocalizedString("listings.searchbar.placeholder", comment: "listings.searchbar.placeholder")
         searchController.obscuresBackgroundDuringPresentation = true
-        
         navigationItem.searchController = searchController
+        
+        if let loadedEmptyView = Bundle.main.loadNibNamed("EmptyView", owner: nil, options: [:])?.first as? EmptyView {
+            emptyView = loadedEmptyView
+            emptyView?.setMessage(message: NSLocalizedString("generic.initialEmptyMessage", comment: "generic.initialEmptyMessage"))
+            collectionView?.backgroundView = emptyView
+        }
         
         collectionView?.register(UINib(nibName: "GalleryItemCell", bundle: nil), forCellWithReuseIdentifier: "GalleryItemCell")
         
@@ -45,13 +86,10 @@ class ListingViewController: UIViewController, TitleLocalizable, DataRepositoryI
             layout.minimumLineSpacing = 0.0
             layout.sectionInset = UIEdgeInsets.zero
         }
-        
-        if let loadedEmptyView = Bundle.main.loadNibNamed("EmptyView", owner: nil, options: [:])?.first as? EmptyView {
-            emptyView = loadedEmptyView
-            emptyView?.setMessage(message: NSLocalizedString("generic.initialEmptyMessage", comment: "generic.initialEmptyMessage"))
-            collectionView?.backgroundView = emptyView
-        }
+    }
     
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
     
     private func updateUI() {
@@ -65,29 +103,25 @@ class ListingViewController: UIViewController, TitleLocalizable, DataRepositoryI
             emptyView?.setMessage(message: NSLocalizedString("generic.noResults", comment: "generic.noResults"))
         }
     }
-    
-    func getLocalizedTitle() -> String {
-        return NSLocalizedString("listings.title", comment: "listings.title")
+
+    @objc func favoritesChanged() {
+       //Called when favorites is added/removed from any view controller
     }
     
-    private func search(keyword: String) {
-        
-        //Discard empty keywords
-        guard keyword.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines) != "" else {
-            return
-        }
-        
-        //Discard search if the keyword didn't change
-        guard keyword != lastSearchKeyword else {
-            return
-        }
+    func search(keyword: String) {
         
         lastSearchKeyword = keyword
         
         let formatStr = NSLocalizedString("listing.searchingLoadingHUDText", comment:"listing.searchingLoadingHUDText")
         
-        showLoadingHUD(loadingMessage: String(format:formatStr, lastSearchKeyword))
-        dataRepository?.getPosts(type: .top, forKeyword: keyword, afterId: nil, completionHandler: { [weak self] (result) in
+        if let lastSearchKeyword = lastSearchKeyword {
+            showLoadingHUD(loadingMessage: String(format:formatStr, lastSearchKeyword))
+        }
+        else {
+            showLoadingHUD()
+        }
+        
+        dataRepository?.getPosts(searchKeyword: keyword, afterId: nil, completionHandler: { [weak self] (result) in
             
             self?.hideLoadingHUD()
             
@@ -99,6 +133,10 @@ class ListingViewController: UIViewController, TitleLocalizable, DataRepositoryI
             break
             }
         })
+    }
+    
+    func setSearchBoxPlaceholder(placeholder: String) {
+        navigationItem.searchController?.searchBar.placeholder = placeholder
     }
 }
 
@@ -151,6 +189,10 @@ extension ListingViewController: UICollectionViewDataSource, UICollectionViewDel
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         
+        guard let dataRepository = dataRepository, dataRepository.supportsPaging() else {
+            return
+        }
+        
         guard let posts = posts else {
             return
         }
@@ -171,9 +213,12 @@ extension ListingViewController: UICollectionViewDataSource, UICollectionViewDel
     
     private func loadMoreResults(afterPostId postId: String) {
         //showLoadingHUD(loadingMessage: NSLocalizedString("listing.loadingMoreResults", comment: "listing.loadingMoreResults"))
+        guard let lastSearchKeyword = lastSearchKeyword else {
+            return
+        }
         
         UIApplication.shared.isNetworkActivityIndicatorVisible = true
-        dataRepository?.getPosts(type: .top, forKeyword: lastSearchKeyword, afterId: postId, completionHandler: { [weak self] (result) in
+        dataRepository?.getPosts(searchKeyword: lastSearchKeyword, afterId: postId, completionHandler: { [weak self] (result) in
             
             //self?.hideLoadingHUD()
             UIApplication.shared.isNetworkActivityIndicatorVisible = false

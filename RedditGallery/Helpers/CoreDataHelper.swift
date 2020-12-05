@@ -46,6 +46,20 @@ class CoreDataHelper {
         return true
     }
 
+    static func getFavorites(searchKeyword: String? = nil) -> [Favorite]? {
+        let request : NSFetchRequest<Favorite> = Favorite.fetchRequest()
+        
+        if let searchKeyword = searchKeyword, searchKeyword.trimmingCharacters(in: CharacterSet.whitespaces) != "" {
+            request.predicate = NSPredicate(format: "title CONTAINS[c] %@ || author CONTAINS[c] %@", searchKeyword, searchKeyword)
+        }
+        
+        if let favorites = try? persistentContainer.viewContext.fetch(request) {
+            return favorites
+        }
+        
+        return nil
+    }
+    
     static func isFavorite(postId: String) -> Bool {
         let request : NSFetchRequest<Favorite> = Favorite.fetchRequest()
         request.predicate = NSPredicate(format: "postId == %@", postId)
