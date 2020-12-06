@@ -29,21 +29,29 @@ class RedditClient {
             let httpResponse = response as? HTTPURLResponse
             
             guard error == nil else {
-                completion(.error(error: error, httpStatusCode: httpResponse?.statusCode))
+                DispatchQueue.main.async {
+                    completion(.error(error: error, httpStatusCode: httpResponse?.statusCode))
+                }
                 return
             }
             
             if let data = data {
                 do {
                     let model = try JSONDecoder().decode(ListingRootModel.self, from: data)
-                    completion(.success(data: model, httpStatusCode: httpResponse?.statusCode))
+                    DispatchQueue.main.async {
+                        completion(.success(data: model, httpStatusCode: httpResponse?.statusCode))
+                    }
                 }
                 catch(let error) {
-                    completion(.error(error: error, httpStatusCode: httpResponse?.statusCode))
+                    DispatchQueue.main.async {
+                        completion(.error(error: error, httpStatusCode: httpResponse?.statusCode))
+                    }
                 }
             }
             else {
-                completion(.success(data: nil, httpStatusCode: httpResponse?.statusCode))
+                DispatchQueue.main.async {
+                    completion(.success(data: nil, httpStatusCode: httpResponse?.statusCode))
+                }
             }
         }
         

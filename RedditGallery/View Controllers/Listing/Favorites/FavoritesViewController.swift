@@ -13,7 +13,8 @@ class FavoritesViewController: ListingViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        setSearchBoxPlaceholder(placeholder: NSLocalizedString("favorites.searchbar.placeholder", comment: "favorites.searchbar.placeholder"))
+        setSearchBarPlaceholderText(text: NSLocalizedString("favorites.searchbar.placeholder", comment: "favorites.searchbar.placeholder"))
+        setEmptyStateMessage(text: NSLocalizedString("favorites.initialEmptyMessage", comment: "favorites.initialEmptyMessage"))
         
     }
     
