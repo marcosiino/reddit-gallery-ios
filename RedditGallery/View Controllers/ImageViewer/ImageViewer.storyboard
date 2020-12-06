@@ -36,37 +36,13 @@
                                     <outlet property="delegate" destination="Pj7-lU-PJx" id="CFF-MO-h1M"/>
                                 </connections>
                             </scrollView>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8FK-Ca-V0l">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                            </view>
-                            <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="68w-sT-ZWZ">
-                                <rect key="frame" x="0.0" y="44" width="414" height="44"/>
-                                <items>
-                                    <navigationItem id="PCa-hO-mit">
-                                        <barButtonItem key="rightBarButtonItem" image="xmark" catalog="system" id="OWP-fS-tCT">
-                                            <color key="tintColor" systemColor="secondaryLabelColor"/>
-                                            <connections>
-                                                <action selector="close" destination="Pj7-lU-PJx" id="uln-Y0-TKn"/>
-                                            </connections>
-                                        </barButtonItem>
-                                    </navigationItem>
-                                </items>
-                            </navigationBar>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="a4D-KT-yXN"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="KHC-Pm-MvP" firstAttribute="leading" secondItem="a4D-KT-yXN" secondAttribute="leading" id="5jz-vU-qgh"/>
-                            <constraint firstItem="68w-sT-ZWZ" firstAttribute="leading" secondItem="a4D-KT-yXN" secondAttribute="leading" id="A6L-jw-eb5"/>
-                            <constraint firstItem="68w-sT-ZWZ" firstAttribute="top" secondItem="8FK-Ca-V0l" secondAttribute="bottom" id="GoC-e1-lap"/>
                             <constraint firstItem="KHC-Pm-MvP" firstAttribute="bottom" secondItem="ZOX-zL-7Wr" secondAttribute="bottom" id="RFU-Vm-dMl"/>
                             <constraint firstAttribute="top" secondItem="KHC-Pm-MvP" secondAttribute="top" id="XPC-Sr-kv8"/>
-                            <constraint firstItem="8FK-Ca-V0l" firstAttribute="leading" secondItem="a4D-KT-yXN" secondAttribute="leading" id="c4P-Jd-aAr"/>
-                            <constraint firstAttribute="top" secondItem="8FK-Ca-V0l" secondAttribute="top" id="d3a-Gp-Dxh"/>
-                            <constraint firstItem="68w-sT-ZWZ" firstAttribute="top" secondItem="a4D-KT-yXN" secondAttribute="top" id="tRW-3m-5MW"/>
-                            <constraint firstItem="a4D-KT-yXN" firstAttribute="trailing" secondItem="68w-sT-ZWZ" secondAttribute="trailing" id="xxL-uD-ctk"/>
-                            <constraint firstItem="a4D-KT-yXN" firstAttribute="trailing" secondItem="8FK-Ca-V0l" secondAttribute="trailing" id="yD1-H9-hSd"/>
                             <constraint firstItem="a4D-KT-yXN" firstAttribute="trailing" secondItem="KHC-Pm-MvP" secondAttribute="trailing" id="ydK-VX-e4n"/>
                         </constraints>
                     </view>
@@ -81,10 +57,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="xmark" catalog="system" width="128" height="113"/>
-        <systemColor name="secondaryLabelColor">
-            <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
-        </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

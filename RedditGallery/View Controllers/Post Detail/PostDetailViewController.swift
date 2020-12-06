@@ -176,8 +176,7 @@ extension PostDetailViewController {
         //Selected the image
         if indexPath.row == 0, let image = imageView?.image {
             let imageViewerVC = ImageViewerViewController.instantiate(image: image)
-            imageViewerVC.modalPresentationStyle = .fullScreen
-            present(imageViewerVC, animated: true, completion: nil)
+            navigationController?.pushViewController(imageViewerVC, animated: true)
         }
     }
     
