@@ -46,7 +46,8 @@ class ListingViewController: UIViewController, DataRepositoryInjectable, Loadabl
 
         search(keyword: "")
         
-        NotificationCenter.default.addObserver(self, selector: #selector(favoritesChanged), name: .favoritesChanged, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(favoritesChanged), name: .addedFavorite, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(favoritesChanged), name: .removedFavorite, object: nil)
         
     }
     

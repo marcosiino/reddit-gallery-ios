@@ -20,10 +20,12 @@ class MainViewController: UITabBarController {
         
         let subredditGalleryVC = GalleryViewController(dataRepository: RedditDataRepository())
         subredditGalleryVC.title = NSLocalizedString("gallery.title", comment: "gallery.title")
+        subredditGalleryVC.tabBarItem.image = UIImage(systemName: "magnifyingglass")
         
         let favoritesVC = FavoritesViewController(dataRepository: FavoritesRepository())
         favoritesVC.title = NSLocalizedString("favorites.title", comment: "favorites.title")
-                                                                   
+        favoritesVC.tabBarItem.image = UIImage(systemName: "heart")
+        
         viewControllers = [
             UINavigationController(rootViewController: subredditGalleryVC),
             UINavigationController(rootViewController: favoritesVC)

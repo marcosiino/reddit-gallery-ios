@@ -22,8 +22,12 @@ class PostDetailViewController: UITableViewController, DataRepositoryInjectable,
     @IBOutlet weak var upsLabel: UILabel?
     @IBOutlet weak var downsLabel: UILabel?
     @IBOutlet weak var favoriteButton: UIButton?
+    @IBOutlet weak var upsImageView: UIImageView?
+    @IBOutlet weak var downsImageView: UIImageView?
     
-    var post: Post?
+    //Read only from outside because the viewcontroller is observing favorite changes notifications only for the post id which is showing
+    private(set) var post: Post?
+    
     var dataRepository: DataRepository?
     
     static func instantiate(post: Post, dataRepository: DataRepository) -> PostDetailViewController {
@@ -40,6 +44,15 @@ class PostDetailViewController: UITableViewController, DataRepositoryInjectable,
         updateUI()
         tableView.estimatedRowHeight = 200.0
         tableView.rowHeight = UITableView.automaticDimension
+        
+        if let post = post {
+            NotificationCenter.default.addObserver(self, selector: #selector(favoriteAdded), name: .addedFavorite, object: post.id)
+            NotificationCenter.default.addObserver(self, selector: #selector(favoriteRemoved), name: .removedFavorite, object: post.id)
+        }
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
     
     private func updateUI() {
@@ -57,6 +70,8 @@ class PostDetailViewController: UITableViewController, DataRepositoryInjectable,
             else {
                 upsLabel?.text = ""
                 downsLabel?.text = ""
+                upsImageView?.isHidden = true
+                downsImageView?.isHidden = true
             }
             
             let symbolConf = UIImage.SymbolConfiguration(pointSize: 20.0, weight: .medium, scale: .large)
@@ -126,6 +141,30 @@ class PostDetailViewController: UITableViewController, DataRepositoryInjectable,
                 post!.favorited = true
                 updateUI()
             }
+        }
+    }
+    
+    //The post has been added to favorites from outside, refresh UI
+    @objc func favoriteAdded(notification: Notification) {
+        guard let post = post else {
+            return
+        }
+        
+        if let postId = notification.object as? String, postId == post.id {
+            post.favorited = true
+            updateUI()
+        }
+    }
+    
+    //The post has been removed from favorites from outside, refresh UI
+    @objc func favoriteRemoved(notification: Notification) {
+        guard let post = post else {
+            return
+        }
+        
+        if let postId = notification.object as? String, postId == post.id {
+            post.favorited = false
+            updateUI()
         }
     }
 
