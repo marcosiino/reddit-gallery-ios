@@ -7,6 +7,7 @@
 
 import Foundation
 import UIKit
+import Hero
 
 /**
  A view controller which allows to view an image with pinch to zoom feature
@@ -17,17 +18,24 @@ class ImageViewerViewController: UIViewController {
     @IBOutlet weak var scrollView: UIScrollView?
     
     var image: UIImage?
+    var postId: String?
     
-    static func instantiate(image: UIImage) -> ImageViewerViewController {
+    static func instantiate(image: UIImage, forPostId postId: String) -> ImageViewerViewController {
         let vc = UIStoryboard(name: "ImageViewer", bundle: nil).instantiateViewController(identifier: "ImageViewerViewController") as! ImageViewerViewController
         
         vc.image = image
+        vc.postId = postId
         return vc
     }
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        if let postId = postId {
+            imageView?.hero.id = "postImage-\(postId)"
+        }
+
         
         scrollView?.minimumZoomScale = 1.0
         scrollView?.maximumZoomScale = 3.0

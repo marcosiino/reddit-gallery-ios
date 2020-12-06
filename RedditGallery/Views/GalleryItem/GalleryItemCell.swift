@@ -14,6 +14,8 @@ class GalleryItemCell: UICollectionViewCell {
     var imageDownloadTask: URLSessionTask?
     
     func setPost(post: Post) {
+        hero.id = "postImage-\(post.id)"
+        
         if let thumbnail = post.thumbnail {
             let wasCached = ImageRepository.sharedInstance.isCached(url: thumbnail)
             
@@ -37,6 +39,7 @@ class GalleryItemCell: UICollectionViewCell {
         super.prepareForReuse()
         
         imageView?.image = nil
+        hero.id = nil
         
         //If a previous image downloading was in progress, cancel it to avoid loading the image in a wrong (reused) cell
         if let imageDownloadTask = imageDownloadTask {
