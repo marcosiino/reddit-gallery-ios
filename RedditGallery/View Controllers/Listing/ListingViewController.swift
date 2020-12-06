@@ -151,11 +151,12 @@ extension ListingViewController: UISearchResultsUpdating {
         if let searchText = searchText {
             //Invalidate the previous timer (if any) and create a new timer which delays the search to avoid asking the DataRepository new items for every character typed
             searchTimer?.invalidate()
+            searchTimer = nil
             searchTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: false, block: { [weak self] (timer) in
-            
-                searchController.dismiss(animated: true) {
+        
+                //searchController.dismiss(animated: true) {
                     self?.search(keyword: searchText)
-                }
+                //}
             })
         }
     }

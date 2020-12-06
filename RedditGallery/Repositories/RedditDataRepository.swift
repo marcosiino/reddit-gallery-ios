@@ -31,7 +31,7 @@ class RedditDataRepository: DataRepository {
         
         //Cancel the previous request, if any
         if let dataTask = dataTask {
-            dataTask.cancel()
+            dataTask.cancel() 
         }
         
         //Start a new request to the client
@@ -77,23 +77,17 @@ class RedditDataRepository: DataRepository {
                     }
                     
                     //Calling the completion closure on the main thread
-                    DispatchQueue.main.async {
-                        completionHandler(.success(posts))
-                    }
+                    completionHandler(.success(posts))
                 }
                 else {
                     
                     //Calling the completion closure on the main thread
-                    DispatchQueue.main.async {
-                        completionHandler(.success([Post]()))
-                    }
+                    completionHandler(.success([Post]()))
                 }
             case .error(let error, let httpStatusCode):
                 
                 //Calling the completion closure on the main thread
-                DispatchQueue.main.async {
-                    completionHandler(.error(error))
-                }
+                completionHandler(.error(error))
             }
         }
     }

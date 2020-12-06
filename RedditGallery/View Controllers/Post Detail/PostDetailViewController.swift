@@ -150,7 +150,7 @@ extension PostDetailViewController {
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         
         if indexPath.row == 0 {
-            return self.view.frame.size.height*0.4 //The image has a fixed height
+            return self.view.frame.size.height*0.6 //The image has a fixed height
         }
         else{
             return UITableView.automaticDimension
