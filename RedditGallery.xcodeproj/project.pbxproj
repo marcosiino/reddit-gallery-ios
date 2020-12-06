@@ -179,6 +179,24 @@
 			path = "Data Models";
 			sourceTree = "<group>";
 		};
+		A9244299257CF4FB00A6F35A /* GalleryItem */ = {
+			isa = PBXGroup;
+			children = (
+				A9BFC07C2578DC8E00B800C4 /* GalleryItemCell.swift */,
+				A9BFC0892578DD3500B800C4 /* GalleryItemCell.xib */,
+			);
+			path = GalleryItem;
+			sourceTree = "<group>";
+		};
+		A924429A257CF50600A6F35A /* EmptyView */ = {
+			isa = PBXGroup;
+			children = (
+				A9BFC09325793DCF00B800C4 /* EmptyView.swift */,
+				A9BFC08E25793DC500B800C4 /* EmptyView.xib */,
+			);
+			path = EmptyView;
+			sourceTree = "<group>";
+		};
 		A964816E257AEBC400CACA64 /* Protocols */ = {
 			isa = PBXGroup;
 			children = (
@@ -224,6 +242,7 @@
 				A9003DB82578479600402F62 /* Data Models */,
 				A9003DAA25783D6200402F62 /* Repositories */,
 				A99876622577E380007C5EF9 /* Network Layer */,
+				A9BFC07B2578DC6D00B800C4 /* Views */,
 				A9BFC0382578C86000B800C4 /* View Controllers */,
 				A9003DA125783B3F00402F62 /* Helpers */,
 				A9BFC0332578C70900B800C4 /* Localizable.strings */,
@@ -279,7 +298,6 @@
 				A9BFC03A2578C8BC00B800C4 /* ListingViewController.swift */,
 				A9DCC2B2257BF83600F5988C /* Gallery */,
 				A9648175257AEDB300CACA64 /* Favorites */,
-				A9BFC07B2578DC6D00B800C4 /* Views */,
 			);
 			path = Listing;
 			sourceTree = "<group>";
@@ -287,10 +305,8 @@
 		A9BFC07B2578DC6D00B800C4 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				A9BFC07C2578DC8E00B800C4 /* GalleryItemCell.swift */,
-				A9BFC0892578DD3500B800C4 /* GalleryItemCell.xib */,
-				A9BFC09325793DCF00B800C4 /* EmptyView.swift */,
-				A9BFC08E25793DC500B800C4 /* EmptyView.xib */,
+				A924429A257CF50600A6F35A /* EmptyView */,
+				A9244299257CF4FB00A6F35A /* GalleryItem */,
 			);
 			path = Views;
 			sourceTree = "<group>";
