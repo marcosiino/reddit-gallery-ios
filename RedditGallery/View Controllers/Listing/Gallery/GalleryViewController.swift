@@ -28,4 +28,17 @@ class GalleryViewController: ListingViewController {
             post.refreshFavoriteStatus()
         }
     }
+    
+    override func updateUI() {
+        super.updateUI()
+        
+        if let posts = posts, posts.count == 0 {
+            if getLastSearchKeyword() != "" {
+                setEmptyStateMessage(text: NSLocalizedString("gallery.noResults", comment: "gallery.noResults"))
+            }
+            else {
+                setEmptyStateMessage(text: NSLocalizedString("gallery.initialEmptyMessage", comment: "gallery.initialEmptyMessage"))
+            }
+        }
+    }
 }

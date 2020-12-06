@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.1 - 2020-12-06
+
+### Fixes
+
+Bug fixes and minor UI improvements
+
 ## 0.3.0 - 2020-12-05
 
 ### New features

@@ -6,10 +6,8 @@
   
 */
 
-"generic.noResults" = "Non ci sono immagini in questo subreddit";
 "generic.error" = "Errore";
 "generic.ok" = "Ok";
-
 
 "listing.searchingLoadingHUDText" = "Downloading da /r/%@...";
 "listing.loadingMoreResults" = "Download delle immagini successive...";
@@ -17,9 +15,11 @@
 "gallery.searchbar.placeholder" = "Subreddit (es. cats)...";
 "gallery.title" = "Galleria";
 "gallery.initialEmptyMessage" = "Digita il nome di un subreddit nella barra di ricerca per mostrare le immagini degli utenti";
+"gallery.noResults" = "Non ci sono immagini in questo subreddit";
 
 "postDetail.loadingImageFailedMessage" = "Errore durante il caricamento dell'immagine";
 
 "favorites.title" = "Preferiti";
 "favorites.searchbar.placeholder" = "Titolo o autore...";
 "favorites.initialEmptyMessage" = "Non ci sono preferiti. Aggiungi i post che ti piacciono ai preferiti per vederli qui.";
+"favorites.noResults" = "La ricerca non ha prodotto risultati";

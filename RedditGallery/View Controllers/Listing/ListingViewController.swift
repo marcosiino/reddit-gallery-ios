@@ -112,7 +112,6 @@ class ListingViewController: UIViewController, DataRepositoryInjectable, Loadabl
     }
     
     func search(keyword: String) {
-        
         lastSearchKeyword = keyword
         
         let formatStr = NSLocalizedString("listing.searchingLoadingHUDText", comment:"listing.searchingLoadingHUDText")
@@ -145,6 +144,10 @@ class ListingViewController: UIViewController, DataRepositoryInjectable, Loadabl
     
     func setEmptyStateMessage(text: String) {
         emptyView?.setMessage(message: text)
+    }
+    
+    func getLastSearchKeyword() -> String {
+        return lastSearchKeyword ?? ""
     }
     
     @objc func resignSearchBar() {

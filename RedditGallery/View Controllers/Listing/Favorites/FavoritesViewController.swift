@@ -24,5 +24,17 @@ class FavoritesViewController: ListingViewController {
         search(keyword: lastSearchKeyword ?? "")
     }
     
+    override func updateUI() {
+        super.updateUI()
+        
+        if let posts = posts, posts.count == 0 {
+            if getLastSearchKeyword() != "" {
+                setEmptyStateMessage(text: NSLocalizedString("favorites.noResults", comment: "favorites.noResults"))
+            }
+            else {
+                setEmptyStateMessage(text: NSLocalizedString("favorites.initialEmptyMessage", comment: "favorites.initialEmptyMessage"))
+            }
+        }
+    }
     
 }
