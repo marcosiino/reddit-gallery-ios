@@ -10,25 +10,37 @@ import UIKit
 
 class GalleryItemCell: UICollectionViewCell {
     @IBOutlet weak var imageView: UIImageView?
-    private let noImage = UIImage(systemName: "camera.fill")
+    
+    var imageDownloadTask: URLSessionTask?
     
     func setPost(post: Post) {
-        //Reset the image
-        imageView?.image = noImage
-        
         if let thumbnail = post.thumbnail {
-            ImageRepository.sharedInstance.getImage(url: thumbnail) { [weak self] (result) in
+            let wasCached = ImageRepository.sharedInstance.isCached(url: thumbnail)
+            
+            imageDownloadTask = ImageRepository.sharedInstance.getImage(url: thumbnail) { [weak self] (result) in
                 switch(result) {
                 case .success(let image):
                     if let image = image {
                         self?.imageView?.image = image
+                        if wasCached == false {
+                            self?.imageView?.fadeIn()
+                        }
                     }
-                break
                 case .error(let error):
-                    self?.imageView?.image = self?.noImage
                     break
                 }
             }
+        }
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        
+        imageView?.image = nil
+        
+        //If a previous image downloading was in progress, cancel it to avoid loading the image in a wrong (reused) cell
+        if let imageDownloadTask = imageDownloadTask {
+            imageDownloadTask.cancel()
         }
     }
 }

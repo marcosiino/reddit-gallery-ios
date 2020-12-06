@@ -46,8 +46,9 @@ class ListingViewController: UIViewController, DataRepositoryInjectable, Loadabl
 
         search(keyword: "")
         
-        NotificationCenter.default.addObserver(self, selector: #selector(favoritesChanged), name: .favoritesChanged, object: nil)
-        
+        NotificationCenter.default.addObserver(self, selector: #selector(favoritesChanged), name: .addedFavorite, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(favoritesChanged), name: .removedFavorite, object: nil)
+    
     }
     
     func setupUI() {
@@ -144,6 +145,10 @@ class ListingViewController: UIViewController, DataRepositoryInjectable, Loadabl
     
     func setEmptyStateMessage(text: String) {
         emptyView?.setMessage(message: text)
+    }
+    
+    func setEmptyStateImage(image: UIImage) {
+        emptyView?.setImage(image: image)
     }
     
     func getLastSearchKeyword() -> String {

@@ -15,7 +15,7 @@ class FavoritesViewController: ListingViewController {
         
         setSearchBarPlaceholderText(text: NSLocalizedString("favorites.searchbar.placeholder", comment: "favorites.searchbar.placeholder"))
         setEmptyStateMessage(text: NSLocalizedString("favorites.initialEmptyMessage", comment: "favorites.initialEmptyMessage"))
-        
+        setEmptyStateImage(image: UIImage(systemName: "heart")!)
     }
     
     override func favoritesChanged() {
