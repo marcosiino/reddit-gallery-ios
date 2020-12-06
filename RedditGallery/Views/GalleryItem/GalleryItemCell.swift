@@ -11,14 +11,13 @@ import UIKit
 class GalleryItemCell: UICollectionViewCell {
     @IBOutlet weak var imageView: UIImageView?
     
+    var imageDownloadTask: URLSessionTask?
+    
     func setPost(post: Post) {
-        //Reset the image
-        imageView?.image = nil
-        
         if let thumbnail = post.thumbnail {
             let wasCached = ImageRepository.sharedInstance.isCached(url: thumbnail)
             
-            ImageRepository.sharedInstance.getImage(url: thumbnail) { [weak self] (result) in
+            imageDownloadTask = ImageRepository.sharedInstance.getImage(url: thumbnail) { [weak self] (result) in
                 switch(result) {
                 case .success(let image):
                     if let image = image {
@@ -28,9 +27,20 @@ class GalleryItemCell: UICollectionViewCell {
                         }
                     }
                 case .error(let error):
-                    self?.imageView?.image = nil
+                    break
                 }
             }
+        }
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        
+        imageView?.image = nil
+        
+        //If a previous image downloading was in progress, cancel it to avoid loading the image in a wrong (reused) cell
+        if let imageDownloadTask = imageDownloadTask {
+            imageDownloadTask.cancel()
         }
     }
 }
