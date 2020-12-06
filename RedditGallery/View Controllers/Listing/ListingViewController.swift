@@ -91,6 +91,9 @@ class ListingViewController: UIViewController, DataRepositoryInjectable, Loadabl
         
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(resignSearchBar))
         emptyView?.addGestureRecognizer(tapGestureRecognizer)
+        
+        //navigationController?.heroNavigationAnimationType = 
+        navigationController?.hero.isEnabled = true
     }
     
     deinit {

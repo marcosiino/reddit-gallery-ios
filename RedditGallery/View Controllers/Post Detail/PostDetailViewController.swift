@@ -7,6 +7,7 @@
 
 import Foundation
 import UIKit
+import Hero
 
 /**
  A view controller which shows a single post details
@@ -116,6 +117,10 @@ class PostDetailViewController: UITableViewController, DataRepositoryInjectable 
         }
          
         setMagnifyingGlassPosition(position: .center)
+        
+        if let post = post {
+            imageView?.hero.id = "postImage-\(post.id)"
+        }
     }
     
     private func scheduleMagnifyingGlassAnimationTimer() {
@@ -317,8 +322,8 @@ class PostDetailViewController: UITableViewController, DataRepositoryInjectable 
 extension PostDetailViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         //Selected the image
-        if indexPath.row == 0, let image = imageView?.image {
-            let imageViewerVC = ImageViewerViewController.instantiate(image: image)
+        if indexPath.row == 0, let image = imageView?.image, let post = post {
+            let imageViewerVC = ImageViewerViewController.instantiate(image: image, forPostId: post.id)
             navigationController?.pushViewController(imageViewerVC, animated: true)
         }
     }

@@ -41,6 +41,7 @@
 		A9BFC08F25793DC500B800C4 /* EmptyView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9BFC08E25793DC500B800C4 /* EmptyView.xib */; };
 		A9BFC09425793DCF00B800C4 /* EmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BFC09325793DCF00B800C4 /* EmptyView.swift */; };
 		A9BFC09F25794A1200B800C4 /* ImageRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BFC09E25794A1200B800C4 /* ImageRepository.swift */; };
+		A9CBA700257D935600172CDA /* Hero in Frameworks */ = {isa = PBXBuildFile; productRef = A9CBA6FF257D935600172CDA /* Hero */; };
 		A9DCC2B4257BF84600F5988C /* GalleryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9DCC2B3257BF84600F5988C /* GalleryViewController.swift */; };
 		A9EFB78E257B7AE000037FAD /* PostDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9EFB78D257B7AE000037FAD /* PostDetailViewController.swift */; };
 		A9EFB7AE257B7D1100037FAD /* PostDetail.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A9EFB7AD257B7D1100037FAD /* PostDetail.storyboard */; };
@@ -120,6 +121,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A9CBA700257D935600172CDA /* Hero in Frameworks */,
 				A9648161257ADBB200CACA64 /* MSLoadingHUD in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -378,6 +380,7 @@
 			name = RedditGallery;
 			packageProductDependencies = (
 				A9648160257ADBB200CACA64 /* MSLoadingHUD */,
+				A9CBA6FF257D935600172CDA /* Hero */,
 			);
 			productName = RedditGallery;
 			productReference = A99876292577E373007C5EF9 /* RedditGallery.app */;
@@ -453,6 +456,7 @@
 			mainGroup = A99876202577E373007C5EF9;
 			packageReferences = (
 				A964815F257ADBB200CACA64 /* XCRemoteSwiftPackageReference "MSLoadingHUD" */,
+				A9CBA6FE257D935600172CDA /* XCRemoteSwiftPackageReference "Hero" */,
 			);
 			productRefGroup = A998762A2577E373007C5EF9 /* Products */;
 			projectDirPath = "";
@@ -886,6 +890,14 @@
 				minimumVersion = 0.1.0;
 			};
 		};
+		A9CBA6FE257D935600172CDA /* XCRemoteSwiftPackageReference "Hero" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/HeroTransitions/Hero.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.5.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -893,6 +905,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = A964815F257ADBB200CACA64 /* XCRemoteSwiftPackageReference "MSLoadingHUD" */;
 			productName = MSLoadingHUD;
+		};
+		A9CBA6FF257D935600172CDA /* Hero */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A9CBA6FE257D935600172CDA /* XCRemoteSwiftPackageReference "Hero" */;
+			productName = Hero;
 		};
 /* End XCSwiftPackageProductDependency section */
 
