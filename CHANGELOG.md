@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.2 - 2020-12-06
+
+### Fixes
+
+- Many UI improvements, bug fixes and cleaning done.
+
 ## 0.3.1 - 2020-12-06
 
 ### Fixes
