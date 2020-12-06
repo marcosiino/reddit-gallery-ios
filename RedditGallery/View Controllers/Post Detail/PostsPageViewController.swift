@@ -12,18 +12,12 @@
 import Foundation
 import UIKit
 
-protocol PostsPageViewControllerDelegate: class {
-    func didStartLoadingPostData()
-    func didFinishLoadingPostData()
-}
-
 class PostsPageViewController: UIPageViewController, DataRepositoryInjectable {
     private let posts: [Post]
     private var currentPostIndex: Int = 0
     var dataRepository: DataRepository?
-    weak var postsPagesDelegate: PostsPageViewControllerDelegate?
     
-    init(posts _posts: [Post], initialPostIndex index: Int, delegate _del: PostsPageViewControllerDelegate, dataRepository: DataRepository) {
+    init(posts _posts: [Post], initialPostIndex index: Int, dataRepository: DataRepository) {
         
         posts = _posts
         if currentPostIndex < posts.count {
@@ -32,8 +26,6 @@ class PostsPageViewController: UIPageViewController, DataRepositoryInjectable {
         else {
             currentPostIndex = 0
         }
-        
-        postsPagesDelegate = _del
         
         self.dataRepository = dataRepository
         
@@ -67,19 +59,9 @@ class PostsPageViewController: UIPageViewController, DataRepositoryInjectable {
         }
         
         //An item which is not the first or the last
-        let currentPageVC = PostDetailViewController.instantiate(post: posts[index], delegate: self, dataRepository: dataRepository)
+        let currentPageVC = PostDetailViewController.instantiate(post: posts[index], dataRepository: dataRepository)
         
         return currentPageVC
-    }
-}
-
-extension PostsPageViewController: PostDetailViewControllerDelegate {
-    func didFinishLoadingPost(postDetailViewController: PostDetailViewController, post: Post) {
-        postsPagesDelegate?.didFinishLoadingPostData()
-    }
-    
-    func didStartLoadingPost(postDetailViewController: PostDetailViewController, post: Post) {
-        postsPagesDelegate?.didStartLoadingPostData()
     }
 }
 

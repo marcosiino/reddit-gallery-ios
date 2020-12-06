@@ -13,12 +13,8 @@ import MSLoadingHUD
  A view controller which shows a single post details
  */
 
-protocol PostDetailViewControllerDelegate: class {
-    func didStartLoadingPost(postDetailViewController: PostDetailViewController, post: Post)
-    func didFinishLoadingPost(postDetailViewController: PostDetailViewController, post: Post)
-}
 
-class PostDetailViewController: UITableViewController, DataRepositoryInjectable {
+class PostDetailViewController: UITableViewController, DataRepositoryInjectable, Loadable {
     
     @IBOutlet weak var imageView: UIImageView?
     @IBOutlet weak var titleLabel: UILabel?
@@ -29,17 +25,14 @@ class PostDetailViewController: UITableViewController, DataRepositoryInjectable 
     
     var post: Post?
     var dataRepository: DataRepository?
-    weak var delegate: PostDetailViewControllerDelegate?
     
-    static func instantiate(post: Post, delegate: PostDetailViewControllerDelegate, dataRepository: DataRepository) -> PostDetailViewController {
+    static func instantiate(post: Post, dataRepository: DataRepository) -> PostDetailViewController {
         let vc = UIStoryboard(name: "PostDetail", bundle: nil).instantiateViewController(identifier: "PostDetailViewController") as! PostDetailViewController
         
         vc.post = post
-        vc.delegate = delegate
         vc.dataRepository = dataRepository
         return vc
     }
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -89,7 +82,7 @@ class PostDetailViewController: UITableViewController, DataRepositoryInjectable 
             
             //Only show the loading HUD if the image is not cached (it would require time
             if isCached == false {
-                delegate?.didStartLoadingPost(postDetailViewController: self, post: post)
+                showLoadingHUD()
             }
             
             ImageRepository.sharedInstance.getImage(url: imageUrl) { [weak self] (result) in
@@ -98,7 +91,7 @@ class PostDetailViewController: UITableViewController, DataRepositoryInjectable 
                 }
              
                 if isCached == false {
-                    self.delegate?.didFinishLoadingPost(postDetailViewController: self, post: post)
+                    self.hideLoadingHUD()
                 }
                 
                 switch(result) {

@@ -11,8 +11,10 @@ import MSLoadingHUD
 
 class ListingViewController: UIViewController, DataRepositoryInjectable, Loadable {
     
+    private var searchBar: UISearchBar?
     private var searchTimer: Timer?
     private var emptyView: EmptyView?
+    private var searchBarPlaceholderText: String  = ""
     
     var dataRepository: DataRepository?
     var lastSearchKeyword: String?
@@ -68,7 +70,8 @@ class ListingViewController: UIViewController, DataRepositoryInjectable, Loadabl
         
         if let loadedEmptyView = Bundle.main.loadNibNamed("EmptyView", owner: nil, options: [:])?.first as? EmptyView {
             emptyView = loadedEmptyView
-            emptyView?.setMessage(message: NSLocalizedString("generic.initialEmptyMessage", comment: "generic.initialEmptyMessage"))
+            emptyView?.setMessage(message: "")
+            
             collectionView?.backgroundView = emptyView
         }
         
@@ -84,13 +87,16 @@ class ListingViewController: UIViewController, DataRepositoryInjectable, Loadabl
             //Reference size for the header for the searchbar
             layout.headerReferenceSize = CGSize(width: collectionView.bounds.width, height: 50.0)
         }
+        
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(resignSearchBar))
+        emptyView?.addGestureRecognizer(tapGestureRecognizer)
     }
     
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
     
-    private func updateUI() {
+    func updateUI() {
         collectionView?.reloadData()
         
         if let posts = posts, posts.count > 0 {
@@ -98,7 +104,6 @@ class ListingViewController: UIViewController, DataRepositoryInjectable, Loadabl
         }
         else {
             collectionView?.backgroundView = emptyView
-            emptyView?.setMessage(message: NSLocalizedString("generic.noResults", comment: "generic.noResults"))
         }
     }
 
@@ -133,8 +138,17 @@ class ListingViewController: UIViewController, DataRepositoryInjectable, Loadabl
         })
     }
     
-    func setSearchBoxPlaceholder(placeholder: String) {
-        navigationItem.searchController?.searchBar.placeholder = placeholder
+    func setSearchBarPlaceholderText(text: String) {
+        searchBarPlaceholderText = text
+        searchBar?.placeholder = text
+    }
+    
+    func setEmptyStateMessage(text: String) {
+        emptyView?.setMessage(message: text)
+    }
+    
+    @objc func resignSearchBar() {
+        searchBar?.resignFirstResponder()
     }
 }
 
@@ -157,6 +171,14 @@ extension ListingViewController: UISearchBarDelegate {
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         searchBar.resignFirstResponder()
+    }
+    
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        self.searchBar = searchBar
+    }
+    
+    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
+        self.searchBar = nil
     }
 }
 
@@ -206,7 +228,7 @@ extension ListingViewController: UICollectionViewDataSource, UICollectionViewDel
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
         if let posts = posts, let dataRepository = dataRepository {
-            let detailVC = PostsPageViewController(posts: posts, initialPostIndex: indexPath.row, delegate: self, dataRepository: dataRepository)
+            let detailVC = PostsPageViewController(posts: posts, initialPostIndex: indexPath.row, dataRepository: dataRepository)
             navigationController?.pushViewController(detailVC, animated: true)
         }
     }
@@ -218,12 +240,17 @@ extension ListingViewController: UICollectionViewDataSource, UICollectionViewDel
             
                 headerView.frame.size.height = 50.0
                 headerView.delegate = self
+                headerView.searchPlaceholder = searchBarPlaceholderText
                 
                 return headerView
             }
         }
         
         return UICollectionReusableView()
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        resignSearchBar()
     }
     
     private func loadMoreResults(afterPostId postId: String) {
@@ -248,15 +275,5 @@ extension ListingViewController: UICollectionViewDataSource, UICollectionViewDel
                 break
             }
         })
-    }
-}
-
-extension ListingViewController: PostsPageViewControllerDelegate {
-    func didStartLoadingPostData() {
-        showLoadingHUD()
-    }
-    
-    func didFinishLoadingPostData() {
-        hideLoadingHUD()
     }
 }

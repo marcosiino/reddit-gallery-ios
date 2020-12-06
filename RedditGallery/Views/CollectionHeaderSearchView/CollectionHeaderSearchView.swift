@@ -19,8 +19,16 @@ class CollectionHeaderSearchView: UICollectionReusableView {
         }
     }
     
-    let searchBar: UISearchBar
-    
+    private let searchBar: UISearchBar
+    var searchPlaceholder: String? {
+        set {
+            searchBar.placeholder = newValue
+        }
+        get {
+            return searchBar.placeholder
+        }
+    }
+        
     override init(frame: CGRect) {
         searchBar = UISearchBar(frame: frame)
         super.init(frame: frame)

@@ -11,7 +11,9 @@ class GalleryViewController: ListingViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        setSearchBoxPlaceholder(placeholder: NSLocalizedString("gallery.searchbar.placeholder", comment: "gallery.searchbar.placeholder"))
+        setSearchBarPlaceholderText(text: NSLocalizedString("gallery.searchbar.placeholder", comment: "gallery.searchbar.placeholder"))
+        
+        setEmptyStateMessage(text: NSLocalizedString("gallery.initialEmptyMessage", comment: "gallery.initialEmptyMessage"))
     }
     
     override func favoritesChanged() {
