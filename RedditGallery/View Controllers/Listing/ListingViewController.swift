@@ -48,7 +48,7 @@ class ListingViewController: UIViewController, DataRepositoryInjectable, Loadabl
         
         NotificationCenter.default.addObserver(self, selector: #selector(favoritesChanged), name: .addedFavorite, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(favoritesChanged), name: .removedFavorite, object: nil)
-        
+    
     }
     
     func setupUI() {

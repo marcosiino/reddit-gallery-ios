@@ -65,7 +65,7 @@ class RedditDataRepository: DataRepository {
                             continue
                         }
                         
-                        guard let previewImage = data.preview?.images.first?.smaller?.url else {
+                        guard let previewImage = data.preview?.images.first?.medium?.url else {
                             continue
                         }
                         
