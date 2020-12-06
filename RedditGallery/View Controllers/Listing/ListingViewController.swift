@@ -147,6 +147,10 @@ class ListingViewController: UIViewController, DataRepositoryInjectable, Loadabl
         emptyView?.setMessage(message: text)
     }
     
+    func setEmptyStateImage(image: UIImage) {
+        emptyView?.setImage(image: image)
+    }
+    
     func getLastSearchKeyword() -> String {
         return lastSearchKeyword ?? ""
     }

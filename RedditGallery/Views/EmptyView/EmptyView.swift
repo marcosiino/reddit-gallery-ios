@@ -10,8 +10,13 @@ import UIKit
 
 class EmptyView: UIView {
     @IBOutlet weak var emptyMessageLabel: UILabel?
+    @IBOutlet weak var imageView: UIImageView?
     
     func setMessage(message: String) {
         emptyMessageLabel?.text = message
+    }
+    
+    func setImage(image: UIImage) {
+        imageView?.image = image
     }
 }
