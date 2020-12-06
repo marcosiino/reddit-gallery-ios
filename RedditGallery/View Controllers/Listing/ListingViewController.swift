@@ -11,8 +11,6 @@ import MSLoadingHUD
 
 class ListingViewController: UIViewController, DataRepositoryInjectable, Loadable {
     
-    
-    private var searchController: UISearchController?
     private var searchTimer: Timer?
     private var emptyView: EmptyView?
     
@@ -66,10 +64,7 @@ class ListingViewController: UIViewController, DataRepositoryInjectable, Loadabl
         collectionView?.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
         collectionView?.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         
-        let searchController = UISearchController(searchResultsController: nil)
-        searchController.searchResultsUpdater = self
-        searchController.obscuresBackgroundDuringPresentation = true
-        navigationItem.searchController = searchController
+        collectionView?.register(CollectionHeaderSearchView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "SearchHeader")
         
         if let loadedEmptyView = Bundle.main.loadNibNamed("EmptyView", owner: nil, options: [:])?.first as? EmptyView {
             emptyView = loadedEmptyView
@@ -85,6 +80,9 @@ class ListingViewController: UIViewController, DataRepositoryInjectable, Loadabl
             layout.minimumInteritemSpacing = 0.0
             layout.minimumLineSpacing = 0.0
             layout.sectionInset = UIEdgeInsets.zero
+            
+            //Reference size for the header for the searchbar
+            layout.headerReferenceSize = CGSize(width: collectionView.bounds.width, height: 50.0)
         }
     }
     
@@ -140,27 +138,28 @@ class ListingViewController: UIViewController, DataRepositoryInjectable, Loadabl
     }
 }
 
-extension ListingViewController: UISearchResultsUpdating {
-    func updateSearchResults(for searchController: UISearchController) {
-        
-        let searchText = searchController.searchBar.text
+extension ListingViewController: UISearchBarDelegate {
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         guard searchText != lastSearchKeyword else {
             return
         }
         
-        if let searchText = searchText {
-            //Invalidate the previous timer (if any) and create a new timer which delays the search to avoid asking the DataRepository new items for every character typed
-            searchTimer?.invalidate()
-            searchTimer = nil
-            searchTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: false, block: { [weak self] (timer) in
-        
-                //searchController.dismiss(animated: true) {
-                    self?.search(keyword: searchText)
-                //}
-            })
-        }
+        //Invalidate the previous timer (if any) and create a new timer which delays the search to avoid asking the DataRepository new items for every character typed
+        searchTimer?.invalidate()
+        searchTimer = nil
+        searchTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: false, block: { [weak self] (timer) in
+    
+            //searchController.dismiss(animated: true) {
+                self?.search(keyword: searchText)
+            //}
+        })
+    }
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.resignFirstResponder()
     }
 }
+
 
 extension ListingViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     
@@ -210,6 +209,21 @@ extension ListingViewController: UICollectionViewDataSource, UICollectionViewDel
             let detailVC = PostsPageViewController(posts: posts, initialPostIndex: indexPath.row, delegate: self, dataRepository: dataRepository)
             navigationController?.pushViewController(detailVC, animated: true)
         }
+    }
+
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        
+        if kind == UICollectionView.elementKindSectionHeader {
+            if let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "SearchHeader", for: indexPath) as? CollectionHeaderSearchView {
+            
+                headerView.frame.size.height = 50.0
+                headerView.delegate = self
+                
+                return headerView
+            }
+        }
+        
+        return UICollectionReusableView()
     }
     
     private func loadMoreResults(afterPostId postId: String) {
