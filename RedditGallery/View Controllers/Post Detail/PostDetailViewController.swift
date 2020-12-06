@@ -107,7 +107,7 @@ class PostDetailViewController: UITableViewController, DataRepositoryInjectable 
              
                 if isCached == false {
                     self.imageLoadingIndicator?.isHidden = true
-                    self.animateDownloadedImage()
+                    self.imageView?.fadeIn()
                 }
                 
                 switch(result) {
@@ -120,13 +120,6 @@ class PostDetailViewController: UITableViewController, DataRepositoryInjectable 
                     print("Unable to load image: \(error?.localizedDescription)")
                 }
             }
-        }
-    }
-    
-    private func animateDownloadedImage() {
-        imageView?.alpha = 0.0
-        UIView.animate(withDuration: 0.5) { [weak self] in
-            self?.imageView?.alpha = 1.0
         }
     }
     

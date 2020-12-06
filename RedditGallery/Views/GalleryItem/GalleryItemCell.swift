@@ -10,23 +10,25 @@ import UIKit
 
 class GalleryItemCell: UICollectionViewCell {
     @IBOutlet weak var imageView: UIImageView?
-    private let noImage = UIImage(systemName: "camera.fill")
     
     func setPost(post: Post) {
         //Reset the image
-        imageView?.image = noImage
+        imageView?.image = nil
         
         if let thumbnail = post.thumbnail {
+            let wasCached = ImageRepository.sharedInstance.isCached(url: thumbnail)
+            
             ImageRepository.sharedInstance.getImage(url: thumbnail) { [weak self] (result) in
                 switch(result) {
                 case .success(let image):
                     if let image = image {
                         self?.imageView?.image = image
+                        if wasCached == false {
+                            self?.imageView?.fadeIn()
+                        }
                     }
-                break
                 case .error(let error):
-                    self?.imageView?.image = self?.noImage
-                    break
+                    self?.imageView?.image = nil
                 }
             }
         }
