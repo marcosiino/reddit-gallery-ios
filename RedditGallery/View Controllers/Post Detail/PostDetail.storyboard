@@ -30,7 +30,15 @@
                                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Sio-Fm-8ou">
                                                     <rect key="frame" x="0.0" y="0.0" width="414" height="200"/>
                                                 </imageView>
+                                                <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="XG2-L6-ugg">
+                                                    <rect key="frame" x="188.5" y="81.5" width="37" height="37"/>
+                                                </activityIndicatorView>
                                             </subviews>
+                                            <color key="backgroundColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <constraints>
+                                                <constraint firstItem="XG2-L6-ugg" firstAttribute="centerX" secondItem="rtO-VT-nbT" secondAttribute="centerX" id="AUR-AP-ETR"/>
+                                                <constraint firstItem="XG2-L6-ugg" firstAttribute="centerY" secondItem="rtO-VT-nbT" secondAttribute="centerY" id="ZxP-FB-AHx"/>
+                                            </constraints>
                                         </tableViewCellContentView>
                                         <constraints>
                                             <constraint firstAttribute="bottom" secondItem="Sio-Fm-8ou" secondAttribute="bottom" id="6NG-aA-8pa"/>
@@ -182,6 +190,7 @@
                         <outlet property="downsImageView" destination="6H4-nV-eAF" id="0Vm-GM-dGC"/>
                         <outlet property="downsLabel" destination="fHR-sU-CiR" id="t39-Y3-3JC"/>
                         <outlet property="favoriteButton" destination="Ozb-BK-hh1" id="QkN-hl-yFR"/>
+                        <outlet property="imageLoadingIndicator" destination="XG2-L6-ugg" id="8Dq-1Z-mb6"/>
                         <outlet property="imageView" destination="Sio-Fm-8ou" id="cWf-Na-12o"/>
                         <outlet property="titleLabel" destination="wYn-dH-ar0" id="yQC-mC-UD4"/>
                         <outlet property="upsImageView" destination="u61-5j-Cic" id="9LR-Vm-0kK"/>

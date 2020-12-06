@@ -7,14 +7,13 @@
 
 import Foundation
 import UIKit
-import MSLoadingHUD
 
 /**
  A view controller which shows a single post details
  */
 
 
-class PostDetailViewController: UITableViewController, DataRepositoryInjectable, Loadable {
+class PostDetailViewController: UITableViewController, DataRepositoryInjectable {
     
     @IBOutlet weak var imageView: UIImageView?
     @IBOutlet weak var titleLabel: UILabel?
@@ -24,6 +23,7 @@ class PostDetailViewController: UITableViewController, DataRepositoryInjectable,
     @IBOutlet weak var favoriteButton: UIButton?
     @IBOutlet weak var upsImageView: UIImageView?
     @IBOutlet weak var downsImageView: UIImageView?
+    @IBOutlet weak var imageLoadingIndicator: UIActivityIndicatorView?
     
     //Read only from outside because the viewcontroller is observing favorite changes notifications only for the post id which is showing
     private(set) var post: Post?
@@ -97,7 +97,7 @@ class PostDetailViewController: UITableViewController, DataRepositoryInjectable,
             
             //Only show the loading HUD if the image is not cached (it would require time
             if isCached == false {
-                showLoadingHUD()
+                imageLoadingIndicator?.isHidden = false
             }
             
             ImageRepository.sharedInstance.getImage(url: imageUrl) { [weak self] (result) in
@@ -106,7 +106,8 @@ class PostDetailViewController: UITableViewController, DataRepositoryInjectable,
                 }
              
                 if isCached == false {
-                    self.hideLoadingHUD()
+                    self.imageLoadingIndicator?.isHidden = true
+                    self.animateDownloadedImage()
                 }
                 
                 switch(result) {
@@ -119,6 +120,13 @@ class PostDetailViewController: UITableViewController, DataRepositoryInjectable,
                     print("Unable to load image: \(error?.localizedDescription)")
                 }
             }
+        }
+    }
+    
+    private func animateDownloadedImage() {
+        imageView?.alpha = 0.0
+        UIView.animate(withDuration: 0.5) { [weak self] in
+            self?.imageView?.alpha = 1.0
         }
     }
     
@@ -175,6 +183,7 @@ extension PostDetailViewController {
         //Selected the image
         if indexPath.row == 0, let image = imageView?.image {
             let imageViewerVC = ImageViewerViewController.instantiate(image: image)
+            imageViewerVC.modalPresentationStyle = .fullScreen
             present(imageViewerVC, animated: true, completion: nil)
         }
     }
