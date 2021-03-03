@@ -51,11 +51,22 @@ class ListingViewController: UIViewController, DataRepositoryInjectable, Loadabl
     
     }
     
-    func setupUI() {
-        view.backgroundColor = UIColor.white
-        navigationController?.view.backgroundColor = UIColor.white
+    func setupCollectionViewLayout() -> UICollectionViewLayout {
+        let layout = UICollectionViewFlowLayout()
+        layout.estimatedItemSize = CGSize.zero
+        layout.minimumInteritemSpacing = 0.0
+        layout.minimumLineSpacing = 0.0
+        layout.sectionInset = UIEdgeInsets.zero
         
-        collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: UICollectionViewFlowLayout())
+        //Reference size for the header for the searchbar
+        layout.headerReferenceSize = CGSize(width: self.view.bounds.width, height: 50.0)
+        
+        return layout
+    }
+    
+    func setupCollectionView(layout: UICollectionViewLayout, emptyStateView: UIView?) {
+        
+        collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: layout)
         collectionView?.backgroundColor = UIColor.white
         collectionView?.translatesAutoresizingMaskIntoConstraints = false
         collectionView?.delegate = self
@@ -68,26 +79,22 @@ class ListingViewController: UIViewController, DataRepositoryInjectable, Loadabl
         collectionView?.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         
         collectionView?.register(CollectionHeaderSearchView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "SearchHeader")
+        collectionView?.register(UINib(nibName: "GalleryItemCell", bundle: nil), forCellWithReuseIdentifier: "GalleryItemCell")
         
+        collectionView?.backgroundView = emptyStateView
+    }
+    
+    func setupUI() {
+        view.backgroundColor = UIColor.white
+        navigationController?.view.backgroundColor = UIColor.white
+
         if let loadedEmptyView = Bundle.main.loadNibNamed("EmptyView", owner: nil, options: [:])?.first as? EmptyView {
             emptyView = loadedEmptyView
             emptyView?.setMessage(message: "")
-            
-            collectionView?.backgroundView = emptyView
         }
         
-        collectionView?.register(UINib(nibName: "GalleryItemCell", bundle: nil), forCellWithReuseIdentifier: "GalleryItemCell")
-        
-        
-        if let collectionView = collectionView, let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
-            layout.estimatedItemSize = CGSize.zero
-            layout.minimumInteritemSpacing = 0.0
-            layout.minimumLineSpacing = 0.0
-            layout.sectionInset = UIEdgeInsets.zero
-            
-            //Reference size for the header for the searchbar
-            layout.headerReferenceSize = CGSize(width: collectionView.bounds.width, height: 50.0)
-        }
+        let layout = setupCollectionViewLayout()
+        setupCollectionView(layout: layout, emptyStateView: emptyView)
         
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(resignSearchBar))
         emptyView?.addGestureRecognizer(tapGestureRecognizer)
