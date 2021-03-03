@@ -26,6 +26,11 @@ class ListingViewController: UIViewController, DataRepositoryInjectable, Loadabl
     
     var collectionView: UICollectionView?
     
+    enum BigImageAlignment {
+        case left
+        case right
+    }
+    
     init(dataRepository: DataRepository) {
         self.dataRepository = dataRepository
         super.init(nibName: nil, bundle: nil)
@@ -51,26 +56,91 @@ class ListingViewController: UIViewController, DataRepositoryInjectable, Loadabl
     
     }
     
-    func setupCollectionViewLayout() -> UICollectionViewLayout {
-        //First section with 3 small images in a row
+    func horizontalItemsGroup() -> NSCollectionLayoutGroup {
+        
+        let imageItem = NSCollectionLayoutItem(
+            layoutSize: NSCollectionLayoutSize(
+                widthDimension: .fractionalWidth(1/3),
+                heightDimension: .fractionalHeight(1.0)))
+        imageItem.contentInsets = NSDirectionalEdgeInsets(
+            top: 2.0,
+            leading: 2.0,
+            bottom: 2.0,
+            trailing: 2.0)
+        
+        let group = NSCollectionLayoutGroup.horizontal(
+            layoutSize: NSCollectionLayoutSize(
+                widthDimension: .fractionalWidth(1.0),
+                heightDimension: .fractionalWidth(1/3)),
+            subitems: [imageItem, imageItem, imageItem])
+        
+        return group
+    }
+    
+    func compositeGroupWithBigImage(bigImageAlignment: BigImageAlignment) -> NSCollectionLayoutGroup {
+        
+        //Big Image
+        let bigImageItem = NSCollectionLayoutItem(
+            layoutSize: NSCollectionLayoutSize(
+                widthDimension: .fractionalWidth(2/3),
+                heightDimension: .fractionalHeight(1.0)))
+        bigImageItem.contentInsets = NSDirectionalEdgeInsets(
+            top: 2.0,
+            leading: 2.0,
+            bottom: 2.0,
+            trailing: 2.0)
+        
+        //Trailing group
         let smallImageItem = NSCollectionLayoutItem(
             layoutSize: NSCollectionLayoutSize(
                 widthDimension: .fractionalWidth(1.0),
-                heightDimension: .fractionalWidth(1/3)))
+                heightDimension: .fractionalHeight(1.0)))
         smallImageItem.contentInsets = NSDirectionalEdgeInsets(
             top: 2.0,
             leading: 2.0,
             bottom: 2.0,
             trailing: 2.0)
         
-        let threeImagesGroup = NSCollectionLayoutGroup.horizontal(
+        let verticalSmallImagesGroup = NSCollectionLayoutGroup.vertical(
+            layoutSize: NSCollectionLayoutSize(
+                widthDimension: .fractionalWidth(1/3),
+                heightDimension: .fractionalHeight(1.0)),
+            subitem: smallImageItem,
+            count: 2)
+        
+        let subItems = bigImageAlignment == .left ?
+            [bigImageItem, verticalSmallImagesGroup] //Big image on the left
+            :
+            [verticalSmallImagesGroup, bigImageItem] //Big image on the right
+        
+        let containerGroup = NSCollectionLayoutGroup.horizontal(
             layoutSize: NSCollectionLayoutSize(
                 widthDimension: .fractionalWidth(1.0),
-                heightDimension: .fractionalWidth(1/3)),
-            subitem: smallImageItem,
-            count: 3)
+                heightDimension: .fractionalWidth(2/3)),
+            subitems: subItems)
         
-        let threeImagesSection = NSCollectionLayoutSection(group: threeImagesGroup)
+        return containerGroup
+    }
+    
+    func setupCollectionViewLayout() -> UICollectionViewLayout {
+        
+        //First group with 3 horizontal items
+        let threeImagesGroup = horizontalItemsGroup() //Height 1/3
+        let compositeGroupImgLeft = compositeGroupWithBigImage(bigImageAlignment: .left) // Height 2/3
+        let compositeGroupImgRight = compositeGroupWithBigImage(bigImageAlignment: .right) // Height 2/3
+        
+        let groupsContainer = NSCollectionLayoutGroup.vertical(
+            layoutSize: NSCollectionLayoutSize(
+                widthDimension: .fractionalWidth(1.0),
+                heightDimension: .fractionalWidth(6/3)), //height of each row is 1/3 of the collectionview width
+            subitems: [
+                threeImagesGroup, //1/3
+                compositeGroupImgLeft, //2/3
+                threeImagesGroup, //1/3
+                compositeGroupImgRight, //2/3
+            ])
+        
+        let threeImagesSection = NSCollectionLayoutSection(group: groupsContainer)
         
         let headerItem = NSCollectionLayoutBoundarySupplementaryItem(
             layoutSize: NSCollectionLayoutSize(
