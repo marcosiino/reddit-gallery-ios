@@ -52,16 +52,36 @@ class ListingViewController: UIViewController, DataRepositoryInjectable, Loadabl
     }
     
     func setupCollectionViewLayout() -> UICollectionViewLayout {
-        let layout = UICollectionViewFlowLayout()
-        layout.estimatedItemSize = CGSize.zero
-        layout.minimumInteritemSpacing = 0.0
-        layout.minimumLineSpacing = 0.0
-        layout.sectionInset = UIEdgeInsets.zero
+        //First section with 3 small images in a row
+        let smallImageItem = NSCollectionLayoutItem(
+            layoutSize: NSCollectionLayoutSize(
+                widthDimension: .fractionalWidth(1.0),
+                heightDimension: .fractionalWidth(1/3)))
+        smallImageItem.contentInsets = NSDirectionalEdgeInsets(
+            top: 2.0,
+            leading: 2.0,
+            bottom: 2.0,
+            trailing: 2.0)
         
-        //Reference size for the header for the searchbar
-        layout.headerReferenceSize = CGSize(width: self.view.bounds.width, height: 50.0)
+        let threeImagesGroup = NSCollectionLayoutGroup.horizontal(
+            layoutSize: NSCollectionLayoutSize(
+                widthDimension: .fractionalWidth(1.0),
+                heightDimension: .fractionalWidth(1/3)),
+            subitem: smallImageItem,
+            count: 3)
         
-        return layout
+        let threeImagesSection = NSCollectionLayoutSection(group: threeImagesGroup)
+        
+        let headerItem = NSCollectionLayoutBoundarySupplementaryItem(
+            layoutSize: NSCollectionLayoutSize(
+                widthDimension: .fractionalWidth(1.0),
+                heightDimension: .absolute(50)),
+            elementKind: UICollectionView.elementKindSectionHeader,
+            alignment: .top
+        )
+        threeImagesSection.boundarySupplementaryItems = [headerItem]
+        
+        return UICollectionViewCompositionalLayout(section: threeImagesSection)
     }
     
     func setupCollectionView(layout: UICollectionViewLayout, emptyStateView: UIView?) {
