@@ -13,8 +13,24 @@ class GalleryItemCell: UICollectionViewCell {
     
     var imageDownloadTask: URLSessionTask?
     
-    func setPost(post: Post) {
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        
+        imageView?.layer.masksToBounds = true
+    }
+    
+    func setPost(post: Post, topItem: Bool = false) {
         hero.id = "postImage-\(post.id)"
+        
+        if topItem {
+            imageView?.layer.cornerRadius = 20.0
+            contentView.backgroundColor = .clear
+            
+        }
+        else {
+            imageView?.layer.cornerRadius = 0.0
+            contentView.backgroundColor = .lightGray
+        }
         
         if let thumbnail = post.thumbnail {
             let wasCached = ImageRepository.sharedInstance.isCached(url: thumbnail)
@@ -28,11 +44,12 @@ class GalleryItemCell: UICollectionViewCell {
                             self?.imageView?.fadeIn()
                         }
                     }
-                case .error(let error):
+                case .error(_):
                     break
                 }
             }
         }
+        
     }
     
     override func prepareForReuse() {

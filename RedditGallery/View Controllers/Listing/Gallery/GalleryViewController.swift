@@ -23,13 +23,17 @@ class GalleryViewController: ListingViewController {
     override func favoritesChanged() {
         super.favoritesChanged()
         
-        guard let posts = posts else {
-            return
-        }
-
         //When a favorite is added/removed, I update all the loaded posts favorite status
-        for post in posts {
-            post.refreshFavoriteStatus()
+        if let posts = posts {
+            for post in posts {
+                post.refreshFavoriteStatus()
+            }
+        }
+        
+        if let topPosts = topPosts {
+            for post in topPosts {
+                post.refreshFavoriteStatus()
+            }
         }
     }
     

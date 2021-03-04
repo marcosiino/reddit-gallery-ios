@@ -17,6 +17,7 @@ class ListingViewController: UIViewController, Loadable {
     }
     
     enum Section {
+        case top
         case main
     }
     
@@ -74,148 +75,6 @@ class ListingViewController: UIViewController, Loadable {
         NotificationCenter.default.addObserver(self, selector: #selector(favoritesChanged), name: .removedFavorite, object: nil)
     }
     
-    func horizontalItemsGroup() -> NSCollectionLayoutGroup {
-        
-        let imageItem = NSCollectionLayoutItem(
-            layoutSize: NSCollectionLayoutSize(
-                widthDimension: .fractionalWidth(1/3),
-                heightDimension: .fractionalHeight(1.0)))
-        imageItem.contentInsets = NSDirectionalEdgeInsets(
-            top: 2.0,
-            leading: 2.0,
-            bottom: 2.0,
-            trailing: 2.0)
-        
-        let group = NSCollectionLayoutGroup.horizontal(
-            layoutSize: NSCollectionLayoutSize(
-                widthDimension: .fractionalWidth(1.0),
-                heightDimension: .fractionalWidth(1/3)),
-            subitems: [imageItem, imageItem, imageItem])
-        
-        return group
-    }
-    
-    func compositeGroupWithBigImage(bigImageAlignment: BigImageAlignment) -> NSCollectionLayoutGroup {
-        
-        //Big Image
-        let bigImageItem = NSCollectionLayoutItem(
-            layoutSize: NSCollectionLayoutSize(
-                widthDimension: .fractionalWidth(2/3),
-                heightDimension: .fractionalHeight(1.0)))
-        bigImageItem.contentInsets = NSDirectionalEdgeInsets(
-            top: 2.0,
-            leading: 2.0,
-            bottom: 2.0,
-            trailing: 2.0)
-        
-        //Trailing group
-        let smallImageItem = NSCollectionLayoutItem(
-            layoutSize: NSCollectionLayoutSize(
-                widthDimension: .fractionalWidth(1.0),
-                heightDimension: .fractionalHeight(1.0)))
-        smallImageItem.contentInsets = NSDirectionalEdgeInsets(
-            top: 2.0,
-            leading: 2.0,
-            bottom: 2.0,
-            trailing: 2.0)
-        
-        let verticalSmallImagesGroup = NSCollectionLayoutGroup.vertical(
-            layoutSize: NSCollectionLayoutSize(
-                widthDimension: .fractionalWidth(1/3),
-                heightDimension: .fractionalHeight(1.0)),
-            subitem: smallImageItem,
-            count: 2)
-        
-        let subItems = bigImageAlignment == .left ?
-            [bigImageItem, verticalSmallImagesGroup] //Big image on the left
-            :
-            [verticalSmallImagesGroup, bigImageItem] //Big image on the right
-        
-        let containerGroup = NSCollectionLayoutGroup.horizontal(
-            layoutSize: NSCollectionLayoutSize(
-                widthDimension: .fractionalWidth(1.0),
-                heightDimension: .fractionalWidth(2/3)),
-            subitems: subItems)
-        
-        return containerGroup
-    }
-    
-    func setupCollectionViewLayout() -> UICollectionViewLayout {
-        
-        //First group with 3 horizontal items
-        let threeImagesGroup = horizontalItemsGroup() //Height 1/3
-        let compositeGroupImgLeft = compositeGroupWithBigImage(bigImageAlignment: .left) // Height 2/3
-        let compositeGroupImgRight = compositeGroupWithBigImage(bigImageAlignment: .right) // Height 2/3
-        
-        let groupsContainer = NSCollectionLayoutGroup.vertical(
-            layoutSize: NSCollectionLayoutSize(
-                widthDimension: .fractionalWidth(1.0),
-                heightDimension: .fractionalWidth(6/3)), //height of each row is 1/3 of the collectionview width
-            subitems: [
-                threeImagesGroup, //1/3
-                compositeGroupImgLeft, //2/3
-                threeImagesGroup, //1/3
-                compositeGroupImgRight, //2/3
-            ])
-        
-        let section = NSCollectionLayoutSection(group: groupsContainer)
-        
-        let headerItem = NSCollectionLayoutBoundarySupplementaryItem(
-            layoutSize: NSCollectionLayoutSize(
-                widthDimension: .fractionalWidth(1.0),
-                heightDimension: .absolute(50)),
-            elementKind: UICollectionView.elementKindSectionHeader,
-            alignment: .top
-        )
-        section.boundarySupplementaryItems = [headerItem]
-        
-        return UICollectionViewCompositionalLayout(section: section)
-    }
-    
-    func setupCollectionView(layout: UICollectionViewLayout, emptyStateView: UIView?) {
-        
-        collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: layout)
-        collectionView?.backgroundColor = UIColor.white
-        collectionView?.translatesAutoresizingMaskIntoConstraints = false
-        collectionView?.delegate = self
-        view.addSubview(collectionView!)
-        
-        collectionView?.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
-        collectionView?.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
-        collectionView?.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-        collectionView?.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-        
-        collectionView?.register(CollectionHeaderSearchView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "SearchHeader")
-        collectionView?.register(UINib(nibName: "GalleryItemCell", bundle: nil), forCellWithReuseIdentifier: "GalleryItemCell")
-        
-        collectionView?.backgroundView = emptyStateView
-        
-        datasource = UICollectionViewDiffableDataSource<Section, Post>(collectionView: collectionView!, cellProvider: { [weak self] (collectionView, indexPath, post) -> UICollectionViewCell? in
-            
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "GalleryItemCell", for: indexPath) as? GalleryItemCell else  {
-                return nil
-            }
-            
-            cell.setPost(post: post)
-            return cell
-        })
-        
-        datasource?.supplementaryViewProvider = { [weak self] (collectionView, kind, indexPath) -> UICollectionReusableView? in
-            
-            if kind == UICollectionView.elementKindSectionHeader {
-                if let searchView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "SearchHeader", for: indexPath) as? CollectionHeaderSearchView {
-                
-                    searchView.delegate = self
-                    searchView.searchPlaceholder = self?.searchBarPlaceholderText
-                    
-                    return searchView
-                }
-            }
-            
-            return nil
-        }
-    }
-    
     func setupUI() {
         view.backgroundColor = UIColor.white
         navigationController?.view.backgroundColor = UIColor.white
@@ -241,22 +100,31 @@ class ListingViewController: UIViewController, Loadable {
     
     func updateUI() {
         
-        if let posts = posts, posts.count > 0 {
-            collectionView?.backgroundView = nil
-            
-            var snapshot = NSDiffableDataSourceSnapshot<Section, Post>()
-            snapshot.appendSections([.main])
-            snapshot.appendItems(posts)
-            datasource?.apply(snapshot)
-        }
-        else {
+        guard (posts != nil && posts!.count > 0) || (topPosts != nil && topPosts!.count > 0) else {
             //Create a snapshot with no items
             var snapshot = NSDiffableDataSourceSnapshot<Section, Post>()
             snapshot.appendSections([.main])
             datasource?.apply(snapshot)
 
             collectionView?.backgroundView = emptyView
+            return
         }
+        
+        collectionView?.backgroundView = nil
+        
+        var snapshot = NSDiffableDataSourceSnapshot<Section, Post>()
+        
+        if let topPosts = topPosts, topPosts.count > 0 {
+            snapshot.appendSections([.top])
+            snapshot.appendItems(topPosts)
+        }
+        
+        if let posts = posts, posts.count > 0 {
+            snapshot.appendSections([.main])
+            snapshot.appendItems(posts)
+        }
+        
+        datasource?.apply(snapshot)
     }
 
     @objc func favoritesChanged() {
@@ -399,18 +267,29 @@ extension ListingViewController: UICollectionViewDelegate {
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        var repository: DataRepositoryProtocol? //The repository to pass to the PostsPageViewController {
         
-        var dataRepository: DataRepositoryProtocol? //The repository to pass to the PostsPageViewController
+        var items: [Post]?
         
         switch(listingMode) {
-        case .posts(let mainRepository, _):
-            dataRepository = mainRepository
+        case .posts(let mainRepository, let topRepository):
+            
+            if indexPath.section == 0 {
+                repository = topRepository
+                items = topPosts
+            }
+            else {
+                repository = mainRepository
+                items = posts
+            }
+            
         case .favorites(let favoritesRepository):
-            dataRepository = favoritesRepository
+            repository = favoritesRepository
+            items = posts
         }
         
-        if let posts = posts, let dataRepository = dataRepository {
-            let detailVC = PostsPageViewController(posts: posts, initialPostIndex: indexPath.row, dataRepository: dataRepository, favoritesService: favoritesService)
+        if let items = items, let repository = repository {
+            let detailVC = PostsPageViewController(posts: items, initialPostIndex: indexPath.row, dataRepository: repository, favoritesService: favoritesService)
             navigationController?.pushViewController(detailVC, animated: true)
         }
     }
@@ -451,5 +330,205 @@ extension ListingViewController: UICollectionViewDelegate {
                 break
             }
         })
+    }
+}
+
+// MARK - Collection View setup and Compositional Layout setup
+extension ListingViewController {
+    
+    func setupCollectionView(layout: UICollectionViewLayout, emptyStateView: UIView?) {
+        
+        collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: layout)
+        collectionView?.backgroundColor = UIColor.white
+        collectionView?.translatesAutoresizingMaskIntoConstraints = false
+        collectionView?.delegate = self
+        view.addSubview(collectionView!)
+        
+        collectionView?.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
+        collectionView?.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
+        collectionView?.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        collectionView?.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        
+        collectionView?.register(CollectionHeaderSearchView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "SearchHeader")
+        collectionView?.register(UINib(nibName: "GalleryItemCell", bundle: nil), forCellWithReuseIdentifier: "GalleryItemCell")
+        
+        collectionView?.backgroundView = emptyStateView
+        
+        datasource = UICollectionViewDiffableDataSource<Section, Post>(collectionView: collectionView!, cellProvider: { [weak self] (collectionView, indexPath, post) -> UICollectionViewCell? in
+            
+            guard let section = self?.datasource?.snapshot().sectionIdentifier(containingItem: post) else {
+                return nil
+            }
+            
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "GalleryItemCell", for: indexPath) as? GalleryItemCell else  {
+                return nil
+            }
+            
+            switch(section) {
+            case .top:
+                cell.setPost(post: post, topItem: true)
+            case .main:
+                cell.setPost(post: post, topItem: false)
+            }
+            
+            return cell
+        })
+        
+        datasource?.supplementaryViewProvider = { [weak self] (collectionView, kind, indexPath) -> UICollectionReusableView? in
+            
+            if kind == UICollectionView.elementKindSectionHeader {
+                if let searchView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "SearchHeader", for: indexPath) as? CollectionHeaderSearchView {
+                
+                    searchView.delegate = self
+                    searchView.searchPlaceholder = self?.searchBarPlaceholderText
+                    
+                    return searchView
+                }
+            }
+            
+            return nil
+        }
+    }
+    
+    func buildMainSection() -> NSCollectionLayoutSection {
+        //First group with 3 horizontal items
+        let threeImagesGroup = horizontalItemsGroup() //Height 1/3
+        let compositeGroupImgLeft = compositeGroupWithBigImage(bigImageAlignment: .left) // Height 2/3
+        let compositeGroupImgRight = compositeGroupWithBigImage(bigImageAlignment: .right) // Height 2/3
+        
+        let groupsContainer = NSCollectionLayoutGroup.vertical(
+            layoutSize: NSCollectionLayoutSize(
+                widthDimension: .fractionalWidth(1.0),
+                heightDimension: .fractionalWidth(6/3)), //height of each row is 1/3 of the collectionview width
+            subitems: [
+                threeImagesGroup, //1/3
+                compositeGroupImgLeft, //2/3
+                threeImagesGroup, //1/3
+                compositeGroupImgRight, //2/3
+            ])
+    
+        return NSCollectionLayoutSection(group: groupsContainer)
+    }
+    
+    func buildTopSection() -> NSCollectionLayoutSection {
+        
+        let itemSize = NSCollectionLayoutSize(
+            widthDimension: .fractionalWidth(1.0),
+            heightDimension: .fractionalHeight(1.0))
+        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+        item.contentInsets = NSDirectionalEdgeInsets(top: 8.0, leading: 10.0, bottom: 10.0, trailing: 8.0)
+        
+        let groupLayoutSize = NSCollectionLayoutSize(
+            widthDimension: .fractionalWidth(0.9),
+            heightDimension: .fractionalHeight(0.3))
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize:groupLayoutSize, subitems: [item])
+    
+        let section = NSCollectionLayoutSection(group: group)
+        section.orthogonalScrollingBehavior = .groupPaging
+        
+        return section
+    }
+    
+    func getCompositionalLayoutSections() -> [NSCollectionLayoutSection] {
+        
+        switch(listingMode) {
+        case .posts(_, _):
+            let topSection = buildTopSection()
+            let mainSection = buildMainSection()
+            return [topSection, mainSection]
+        case .favorites(_):
+            let mainSection = buildMainSection()
+            return [mainSection]
+        }
+        
+    }
+    
+    func setupCollectionViewLayout() -> UICollectionViewLayout {
+    
+        let sections = getCompositionalLayoutSections()
+        
+        let headerItem = NSCollectionLayoutBoundarySupplementaryItem(
+            layoutSize: NSCollectionLayoutSize(
+                widthDimension: .fractionalWidth(1.0),
+                heightDimension: .absolute(50)),
+            elementKind: UICollectionView.elementKindSectionHeader,
+            alignment: .top
+        )
+        
+        sections.first?.boundarySupplementaryItems = [headerItem]
+        
+        return UICollectionViewCompositionalLayout { (sectionNumber, environment) -> NSCollectionLayoutSection? in
+            
+            guard sectionNumber < sections.count else {
+                return nil
+            }
+            
+            return sections[sectionNumber]
+        }
+    }
+    
+    func horizontalItemsGroup() -> NSCollectionLayoutGroup {
+        let imageItem = NSCollectionLayoutItem(
+            layoutSize: NSCollectionLayoutSize(
+                widthDimension: .fractionalWidth(1/3),
+                heightDimension: .fractionalHeight(1.0)))
+        imageItem.contentInsets = NSDirectionalEdgeInsets(
+            top: 2.0,
+            leading: 2.0,
+            bottom: 2.0,
+            trailing: 2.0)
+        
+        let group = NSCollectionLayoutGroup.horizontal(
+            layoutSize: NSCollectionLayoutSize(
+                widthDimension: .fractionalWidth(1.0),
+                heightDimension: .fractionalWidth(1/3)),
+            subitems: [imageItem, imageItem, imageItem])
+        
+        return group
+    }
+    
+    func compositeGroupWithBigImage(bigImageAlignment: BigImageAlignment) -> NSCollectionLayoutGroup {
+        
+        //Big Image
+        let bigImageItem = NSCollectionLayoutItem(
+            layoutSize: NSCollectionLayoutSize(
+                widthDimension: .fractionalWidth(2/3),
+                heightDimension: .fractionalHeight(1.0)))
+        bigImageItem.contentInsets = NSDirectionalEdgeInsets(
+            top: 2.0,
+            leading: 2.0,
+            bottom: 2.0,
+            trailing: 2.0)
+        
+        //Trailing group
+        let smallImageItem = NSCollectionLayoutItem(
+            layoutSize: NSCollectionLayoutSize(
+                widthDimension: .fractionalWidth(1.0),
+                heightDimension: .fractionalHeight(1.0)))
+        smallImageItem.contentInsets = NSDirectionalEdgeInsets(
+            top: 2.0,
+            leading: 2.0,
+            bottom: 2.0,
+            trailing: 2.0)
+        
+        let verticalSmallImagesGroup = NSCollectionLayoutGroup.vertical(
+            layoutSize: NSCollectionLayoutSize(
+                widthDimension: .fractionalWidth(1/3),
+                heightDimension: .fractionalHeight(1.0)),
+            subitem: smallImageItem,
+            count: 2)
+        
+        let subItems = bigImageAlignment == .left ?
+            [bigImageItem, verticalSmallImagesGroup] //Big image on the left
+            :
+            [verticalSmallImagesGroup, bigImageItem] //Big image on the right
+        
+        let containerGroup = NSCollectionLayoutGroup.horizontal(
+            layoutSize: NSCollectionLayoutSize(
+                widthDimension: .fractionalWidth(1.0),
+                heightDimension: .fractionalWidth(2/3)),
+            subitems: subItems)
+        
+        return containerGroup
     }
 }
