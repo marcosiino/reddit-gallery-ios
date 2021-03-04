@@ -68,22 +68,30 @@ extension RedditClient {
          Top listings for the specified keyword. If pageAfter is specified, the items after the specified item id is returned (for paging), otherwise the first page is returned
          */
         case top(keyword: String, afterId: String? = nil)
+        case new(keyword: String, afterId: String? = nil)
         
         var url: URL {
             get {
+                var urlComps = URLComponents(string: baseURL)!
+                var after: String?
+                
                 switch(self) {
                 case .top(let keyword, let afterId):
-                    var urlComps = URLComponents(string: baseURL)!
                     urlComps.path = "/r/\(keyword)/top.json"
-                    
-                    if let afterId = afterId {
-                        urlComps.queryItems = [
-                            URLQueryItem(name: "after", value: afterId)
-                        ]
-                    }
-                    
-                    return urlComps.url!
+                    after = afterId
+                case .new(let keyword, let afterId):
+                    urlComps.path = "/r/\(keyword)/new.json"
+                    after = afterId
                 }
+
+                //Adds afterId argument for paging, if present
+                if let afterId = after {
+                    urlComps.queryItems = [
+                        URLQueryItem(name: "after", value: afterId)
+                    ]
+                }
+                
+                return urlComps.url!
             }
         }
     }
