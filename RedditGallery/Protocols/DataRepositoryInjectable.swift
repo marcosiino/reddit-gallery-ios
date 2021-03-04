@@ -12,5 +12,5 @@ import UIKit
  A protocol which indicates that the class has a method to inject a DataRepository
  */
 protocol DataRepositoryInjectable {
-    var dataRepository: DataRepository? { get set }
+    var dataRepository: DataRepositoryProtocol? { get set }
 }

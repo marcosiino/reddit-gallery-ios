@@ -14,7 +14,7 @@ import Hero
  */
 
 
-class PostDetailViewController: UITableViewController, DataRepositoryInjectable {
+class PostDetailViewController: UITableViewController {
     
     @IBOutlet weak var imageView: UIImageView?
     @IBOutlet weak var titleLabel: UILabel?
@@ -41,13 +41,15 @@ class PostDetailViewController: UITableViewController, DataRepositoryInjectable 
     //Read only from outside because the viewcontroller is observing favorite changes notifications only for the post id which is showing
     private(set) var post: Post?
     
-    var dataRepository: DataRepository?
+    var dataRepository: DataRepositoryProtocol?
+    var favoritesService: FavoritesServiceProtocol?
     
-    static func instantiate(post: Post, dataRepository: DataRepository) -> PostDetailViewController {
+    static func instantiate(post: Post, dataRepository: DataRepositoryProtocol, favoritesService: FavoritesServiceProtocol) -> PostDetailViewController {
         let vc = UIStoryboard(name: "PostDetail", bundle: nil).instantiateViewController(identifier: "PostDetailViewController") as! PostDetailViewController
         
         vc.post = post
         vc.dataRepository = dataRepository
+        vc.favoritesService = favoritesService
         return vc
     }
     
@@ -278,7 +280,7 @@ class PostDetailViewController: UITableViewController, DataRepositoryInjectable 
         
         if post!.favorited { //Is already favorite
             //Remove from favorites
-            if let result = dataRepository?.removeFavorite(post: post!), result == true
+            if let result = favoritesService?.removeFavorite(post: post!), result == true
             {
                 post!.favorited = false
                 updateUI()
@@ -286,7 +288,7 @@ class PostDetailViewController: UITableViewController, DataRepositoryInjectable 
         }
         else { //Is not favorited
             //Add as favorite
-            if let result = dataRepository?.addFavorite(post: post!), result == true {
+            if let result = favoritesService?.addFavorite(post: post!), result == true {
                 post!.favorited = true
                 updateUI()
             }

@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 import MSLoadingHUD
 
-class ListingViewController: UIViewController, DataRepositoryInjectable, Loadable {
+class ListingViewController: UIViewController, Loadable {
     
     enum BigImageAlignment {
         case left
@@ -20,13 +20,26 @@ class ListingViewController: UIViewController, DataRepositoryInjectable, Loadabl
         case main
     }
     
+    enum ListingMode {
+        case posts(mainRepository: DataRepositoryProtocol, topRepository: DataRepositoryProtocol)
+        case favorites(favoritesRepository: DataRepositoryProtocol)
+    }
+    
     private var searchBar: UISearchBar?
     private var searchTimer: Timer?
     private var emptyView: EmptyView?
     private var searchBarPlaceholderText: String  = ""
+    private let listingMode: ListingMode
+    private let favoritesService: FavoritesServiceProtocol
     
-    var dataRepository: DataRepository?
     var lastSearchKeyword: String?
+    
+    var topPosts: [Post]? {
+        didSet {
+            updateUI()
+        }
+    }
+    
     var posts: [Post]? {
         didSet {
             updateUI()
@@ -36,8 +49,9 @@ class ListingViewController: UIViewController, DataRepositoryInjectable, Loadabl
     var collectionView: UICollectionView?
     var datasource: UICollectionViewDiffableDataSource<Section, Post>?
 
-    init(dataRepository: DataRepository) {
-        self.dataRepository = dataRepository
+    init(mode: ListingMode, favoritesService: FavoritesServiceProtocol) {
+        self.listingMode = mode
+        self.favoritesService = favoritesService
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -261,18 +275,48 @@ class ListingViewController: UIViewController, DataRepositoryInjectable, Loadabl
             showLoadingHUD()
         }
         
-        dataRepository?.getPosts(searchKeyword: keyword, afterId: nil, completionHandler: { [weak self] (result) in
+        switch(listingMode) {
+        case .posts(let mainRepository, let topRepository):
+            mainRepository.getPosts(searchKeyword: keyword, afterId: nil, completionHandler: { [weak self] (result) in
+                
+                self?.hideLoadingHUD()
+                
+                switch(result) {
+                case .success(let posts):
+                    self?.posts = posts
+                case .error(_):
+                    //TODO: show error
+                break
+                }
+            })
             
-            self?.hideLoadingHUD()
+            topRepository.getPosts(searchKeyword: keyword, afterId: nil, completionHandler: { [weak self] (result) in
+                
+                self?.hideLoadingHUD()
+                
+                switch(result) {
+                case .success(let posts):
+                    self?.topPosts = posts
+                case .error(_):
+                    //TODO: show error
+                break
+                }
+            })
             
-            switch(result) {
-            case .success(let posts):
-                self?.posts = posts
-            case .error(let _):
-                //TODO: show error
-            break
-            }
-        })
+        case .favorites(let favoritesRepository):
+            favoritesRepository.getPosts(searchKeyword: keyword, afterId: nil, completionHandler: { [weak self] (result) in
+                
+                self?.hideLoadingHUD()
+                
+                switch(result) {
+                case .success(let posts):
+                    self?.posts = posts
+                case .error(_):
+                    //TODO: show error
+                break
+                }
+            })
+        }
     }
     
     func setSearchBarPlaceholderText(text: String) {
@@ -331,7 +375,16 @@ extension ListingViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         
-        guard let dataRepository = dataRepository, dataRepository.supportsPaging() else {
+        var repository: DataRepositoryProtocol?
+        
+        switch(listingMode) {
+        case .posts(let mainRepository, _):
+            repository = mainRepository
+        case .favorites(let favoritesRepository):
+            repository = favoritesRepository
+        }
+        
+        guard let dataRepository = repository, dataRepository.supportsPaging() else {
             return
         }
         
@@ -347,8 +400,17 @@ extension ListingViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
+        var dataRepository: DataRepositoryProtocol? //The repository to pass to the PostsPageViewController
+        
+        switch(listingMode) {
+        case .posts(let mainRepository, _):
+            dataRepository = mainRepository
+        case .favorites(let favoritesRepository):
+            dataRepository = favoritesRepository
+        }
+        
         if let posts = posts, let dataRepository = dataRepository {
-            let detailVC = PostsPageViewController(posts: posts, initialPostIndex: indexPath.row, dataRepository: dataRepository)
+            let detailVC = PostsPageViewController(posts: posts, initialPostIndex: indexPath.row, dataRepository: dataRepository, favoritesService: favoritesService)
             navigationController?.pushViewController(detailVC, animated: true)
         }
     }
@@ -364,7 +426,17 @@ extension ListingViewController: UICollectionViewDelegate {
         }
         
         UIApplication.shared.isNetworkActivityIndicatorVisible = true
-        dataRepository?.getPosts(searchKeyword: lastSearchKeyword, afterId: postId, completionHandler: { [weak self] (result) in
+        
+        var repository: DataRepositoryProtocol?
+        
+        switch(listingMode) {
+        case .posts(let mainRepository, _):
+            repository = mainRepository
+        case .favorites(let favoritesRepository):
+            repository = favoritesRepository
+        }
+        
+        repository?.getPosts(searchKeyword: lastSearchKeyword, afterId: postId, completionHandler: { [weak self] (result) in
             
             //self?.hideLoadingHUD()
             UIApplication.shared.isNetworkActivityIndicatorVisible = false
@@ -375,7 +447,7 @@ extension ListingViewController: UICollectionViewDelegate {
                     self?.posts?.append(contentsOf: posts)
                 }
                 
-            case .error(let _):
+            case .error(_):
                 break
             }
         })

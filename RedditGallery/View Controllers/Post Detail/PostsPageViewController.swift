@@ -12,12 +12,13 @@
 import Foundation
 import UIKit
 
-class PostsPageViewController: UIPageViewController, DataRepositoryInjectable {
+class PostsPageViewController: UIPageViewController {
     private let posts: [Post]
     private var currentPostIndex: Int = 0
-    var dataRepository: DataRepository?
+    private var favoritesService: FavoritesServiceProtocol
+    var dataRepository: DataRepositoryProtocol?
     
-    init(posts _posts: [Post], initialPostIndex index: Int, dataRepository: DataRepository) {
+    init(posts _posts: [Post], initialPostIndex index: Int, dataRepository: DataRepositoryProtocol, favoritesService: FavoritesServiceProtocol) {
         
         posts = _posts
         if currentPostIndex < posts.count {
@@ -28,6 +29,7 @@ class PostsPageViewController: UIPageViewController, DataRepositoryInjectable {
         }
         
         self.dataRepository = dataRepository
+        self.favoritesService = favoritesService
         
         super.init(transitionStyle: .scroll, navigationOrientation: .horizontal, options: [:])
         dataSource = self
@@ -59,7 +61,7 @@ class PostsPageViewController: UIPageViewController, DataRepositoryInjectable {
         }
         
         //An item which is not the first or the last
-        let currentPageVC = PostDetailViewController.instantiate(post: posts[index], dataRepository: dataRepository)
+        let currentPageVC = PostDetailViewController.instantiate(post: posts[index], dataRepository: dataRepository, favoritesService: favoritesService)
         
         return currentPageVC
     }

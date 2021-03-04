@@ -11,7 +11,7 @@ import CoreData
 /**
  Concrete DataRepository
  */
-class FavoritesRepository: DataRepository {
+class FavoritesRepository: DataRepositoryProtocol {
     
     /**
      Retrieves the favorited posts from the database

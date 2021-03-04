@@ -8,6 +8,10 @@
 import Foundation
 class GalleryViewController: ListingViewController {
     
+    convenience init(mainRepository: DataRepositoryProtocol, topRepository: DataRepositoryProtocol, favoritesServices: FavoritesServiceProtocol) {
+        self.init(mode: .posts(mainRepository: mainRepository, topRepository: topRepository), favoritesService: favoritesServices)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         

@@ -10,6 +10,10 @@ import UIKit
 
 class FavoritesViewController: ListingViewController {
     
+    convenience init(favoritesRepository: DataRepositoryProtocol, favoritesService: FavoritesServiceProtocol) {
+        self.init(mode: .favorites(favoritesRepository: favoritesRepository), favoritesService: favoritesService)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
