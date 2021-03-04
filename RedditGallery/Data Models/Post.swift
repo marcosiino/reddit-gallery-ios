@@ -39,3 +39,9 @@ class Post: Equatable {
         favorited = CoreDataHelper.isFavorite(postId: id)
     }
 }
+
+extension Post: Hashable {
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+}

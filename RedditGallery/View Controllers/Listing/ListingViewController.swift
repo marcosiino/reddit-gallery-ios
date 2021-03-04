@@ -11,6 +11,15 @@ import MSLoadingHUD
 
 class ListingViewController: UIViewController, DataRepositoryInjectable, Loadable {
     
+    enum BigImageAlignment {
+        case left
+        case right
+    }
+    
+    enum Section {
+        case main
+    }
+    
     private var searchBar: UISearchBar?
     private var searchTimer: Timer?
     private var emptyView: EmptyView?
@@ -25,12 +34,8 @@ class ListingViewController: UIViewController, DataRepositoryInjectable, Loadabl
     }
     
     var collectionView: UICollectionView?
-    
-    enum BigImageAlignment {
-        case left
-        case right
-    }
-    
+    var datasource: UICollectionViewDiffableDataSource<Section, Post>?
+
     init(dataRepository: DataRepository) {
         self.dataRepository = dataRepository
         super.init(nibName: nil, bundle: nil)
@@ -53,7 +58,6 @@ class ListingViewController: UIViewController, DataRepositoryInjectable, Loadabl
         
         NotificationCenter.default.addObserver(self, selector: #selector(favoritesChanged), name: .addedFavorite, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(favoritesChanged), name: .removedFavorite, object: nil)
-    
     }
     
     func horizontalItemsGroup() -> NSCollectionLayoutGroup {
@@ -140,7 +144,7 @@ class ListingViewController: UIViewController, DataRepositoryInjectable, Loadabl
                 compositeGroupImgRight, //2/3
             ])
         
-        let threeImagesSection = NSCollectionLayoutSection(group: groupsContainer)
+        let section = NSCollectionLayoutSection(group: groupsContainer)
         
         let headerItem = NSCollectionLayoutBoundarySupplementaryItem(
             layoutSize: NSCollectionLayoutSize(
@@ -149,9 +153,9 @@ class ListingViewController: UIViewController, DataRepositoryInjectable, Loadabl
             elementKind: UICollectionView.elementKindSectionHeader,
             alignment: .top
         )
-        threeImagesSection.boundarySupplementaryItems = [headerItem]
+        section.boundarySupplementaryItems = [headerItem]
         
-        return UICollectionViewCompositionalLayout(section: threeImagesSection)
+        return UICollectionViewCompositionalLayout(section: section)
     }
     
     func setupCollectionView(layout: UICollectionViewLayout, emptyStateView: UIView?) {
@@ -160,7 +164,6 @@ class ListingViewController: UIViewController, DataRepositoryInjectable, Loadabl
         collectionView?.backgroundColor = UIColor.white
         collectionView?.translatesAutoresizingMaskIntoConstraints = false
         collectionView?.delegate = self
-        collectionView?.dataSource = self
         view.addSubview(collectionView!)
         
         collectionView?.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
@@ -172,6 +175,31 @@ class ListingViewController: UIViewController, DataRepositoryInjectable, Loadabl
         collectionView?.register(UINib(nibName: "GalleryItemCell", bundle: nil), forCellWithReuseIdentifier: "GalleryItemCell")
         
         collectionView?.backgroundView = emptyStateView
+        
+        datasource = UICollectionViewDiffableDataSource<Section, Post>(collectionView: collectionView!, cellProvider: { [weak self] (collectionView, indexPath, post) -> UICollectionViewCell? in
+            
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "GalleryItemCell", for: indexPath) as? GalleryItemCell else  {
+                return nil
+            }
+            
+            cell.setPost(post: post)
+            return cell
+        })
+        
+        datasource?.supplementaryViewProvider = { [weak self] (collectionView, kind, indexPath) -> UICollectionReusableView? in
+            
+            if kind == UICollectionView.elementKindSectionHeader {
+                if let searchView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "SearchHeader", for: indexPath) as? CollectionHeaderSearchView {
+                
+                    searchView.delegate = self
+                    searchView.searchPlaceholder = self?.searchBarPlaceholderText
+                    
+                    return searchView
+                }
+            }
+            
+            return nil
+        }
     }
     
     func setupUI() {
@@ -198,12 +226,21 @@ class ListingViewController: UIViewController, DataRepositoryInjectable, Loadabl
     }
     
     func updateUI() {
-        collectionView?.reloadData()
         
         if let posts = posts, posts.count > 0 {
             collectionView?.backgroundView = nil
+            
+            var snapshot = NSDiffableDataSourceSnapshot<Section, Post>()
+            snapshot.appendSections([.main])
+            snapshot.appendItems(posts)
+            datasource?.apply(snapshot)
         }
         else {
+            //Create a snapshot with no items
+            var snapshot = NSDiffableDataSourceSnapshot<Section, Post>()
+            snapshot.appendSections([.main])
+            datasource?.apply(snapshot)
+
             collectionView?.backgroundView = emptyView
         }
     }
@@ -231,7 +268,7 @@ class ListingViewController: UIViewController, DataRepositoryInjectable, Loadabl
             switch(result) {
             case .success(let posts):
                 self?.posts = posts
-            case .error(let error):
+            case .error(let _):
                 //TODO: show error
             break
             }
@@ -290,32 +327,7 @@ extension ListingViewController: UISearchBarDelegate {
     }
 }
 
-
-extension ListingViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "GalleryItemCell", for: indexPath) as? GalleryItemCell else  {
-            
-            return UICollectionViewCell()
-        }
-        
-        if let posts = posts {
-            cell.setPost(post: posts[indexPath.row])
-        }
-        
-        return cell
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return posts?.count ?? 0
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        
-        let size = collectionView.bounds.size.width/3.0
-        return CGSize(width: size, height: size)
-    }
+extension ListingViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         
@@ -341,22 +353,6 @@ extension ListingViewController: UICollectionViewDataSource, UICollectionViewDel
         }
     }
 
-    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        
-        if kind == UICollectionView.elementKindSectionHeader {
-            if let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "SearchHeader", for: indexPath) as? CollectionHeaderSearchView {
-            
-                headerView.frame.size.height = 50.0
-                headerView.delegate = self
-                headerView.searchPlaceholder = searchBarPlaceholderText
-                
-                return headerView
-            }
-        }
-        
-        return UICollectionReusableView()
-    }
-    
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         resignSearchBar()
     }
@@ -379,7 +375,7 @@ extension ListingViewController: UICollectionViewDataSource, UICollectionViewDel
                     self?.posts?.append(contentsOf: posts)
                 }
                 
-            case .error(let error):
+            case .error(let _):
                 break
             }
         })
